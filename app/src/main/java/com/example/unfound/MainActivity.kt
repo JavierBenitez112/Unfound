@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.unfound.Login.LoginScreen1
+import com.example.unfound.log.LogUser
 import com.example.unfound.ui.theme.UnfoundTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             UnfoundTheme {
 
-                LoginScreen1()
+                LogUser()
             }
         }
     }

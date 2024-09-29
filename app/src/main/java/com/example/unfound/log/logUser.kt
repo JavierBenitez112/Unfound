@@ -1,12 +1,12 @@
-package com.example.unfound.Login
+package com.example.unfound.log
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,26 +15,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.unfound.Login.LoginScreen1
 import com.example.unfound.R
 
-
 @Composable
-fun LoginScreen1() {
+fun LogUser() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +59,7 @@ fun LoginScreen1() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
 
-            ) {
+                ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -68,63 +72,88 @@ fun LoginScreen1() {
                         )
                     )
                 )
-                Text(
-                    text = "Know more places",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+
             }
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
+
         Image(
             painter = painterResource(id = R.drawable.unfoundbg),
             contentDescription = "Logo",
-            modifier = Modifier.size(250.dp)
+            modifier = Modifier.size(175.dp)
         )
-
-        // Botones de Login y Crear cuenta modificar accion despues para redirigir a la pantalla de login
-        Spacer(modifier = Modifier.height(32.dp))
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Botón de Login
-            Button(
-                onClick = { /* Acción de login */ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_person_24),
-                    contentDescription = "Login Icon",
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-                Text(text = "Login",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground)
-            }
-            // Botón de Create Account
-            Button(
-                onClick = { /* Acción de crear cuenta */ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Text(text = "Create Account",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground)
-            }
-        }
-    }
-}
+        // Llamada a la función LoginForm
+        LoginForm()
+}}
 
 
 @Composable
+fun LoginForm() {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Campo de texto para el Email
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            singleLine = true
+        )
+
+        // Campo de texto para el Password
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            visualTransformation = PasswordVisualTransformation(),
+            singleLine = true
+        )
+
+        // Botón de "Sign In"
+        Button(
+            onClick = {
+                // Acción de inicio de sesión aquí
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text(text = "Sign In",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground)
+        }
+
+        // Enlace para "Forgot password?"
+        Text(
+            text = "Forgot password?",
+            modifier = Modifier.clickable {
+                // Acción para "Forgot password?"
+            },
+            color = Color.Blue,
+            textDecoration = TextDecoration.Underline
+        )
+    }
+}
+
+@Composable
 @Preview
-fun LoginScreenPreview1() {
-    LoginScreen1()
+fun LogUserPreview() {
+    LogUser()
 }
