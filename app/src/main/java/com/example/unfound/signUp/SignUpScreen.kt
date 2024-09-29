@@ -1,4 +1,4 @@
-package com.example.unfound.log
+package com.example.unfound.signUp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun LogUser() {
+fun SignUpScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,12 +83,12 @@ fun LogUser() {
             modifier = Modifier.size(175.dp)
         )
         // Llamada a la función LoginForm
-        LoginForm()
-}}
+        SignForm()
+    }}
 
 
 @Composable
-fun LoginForm() {
+fun SignForm() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -134,25 +134,15 @@ fun LoginForm() {
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(text = "Sign In",
+            Text(text = "Sign Up",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground)
         }
 
-        // Enlace para "Forgot password?"
-        Text(
-            text = "Forgot password?",
-            modifier = Modifier.clickable {
-                // Acción para "Forgot password?"
-            },
-            color = Color.Blue,
-            textDecoration = TextDecoration.Underline
-        )
     }
 }
 
 @Composable
 @Preview
-fun LogUserPreview() {
-    LogUser()
-}
+fun SignUpScreenPreview() {
+    SignUpScreen()}
