@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.unfound.Home.HomeScreen
+import com.example.unfound.loading.LoadingScreen
 import com.example.unfound.ui.theme.UnfoundTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,11 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UnfoundTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                LoadingScreen()
             }
         }
     }

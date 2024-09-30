@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun LogUser() {
+fun SimplifiedLogUser() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,19 +46,19 @@ fun LogUser() {
         verticalArrangement = Arrangement.Center
     ) {
 
+        // Caja con el texto UNFOUND
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
+                .border(8.dp, MaterialTheme.colorScheme.primary)
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center // Centrar contenido
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-
-                ) {
+            ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -71,30 +71,29 @@ fun LogUser() {
                         )
                     )
                 )
-
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Logo
         Image(
             painter = painterResource(id = R.drawable.unfoundbg),
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )
-        // Llamada a la función LoginForm
-        LoginForm()
-}}
 
+        // Formulario simplificado
+        SimplifiedLoginForm()
+    }
+}
 
 @Composable
-fun LoginForm() {
+fun SimplifiedLoginForm() {
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
-
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -110,22 +109,17 @@ fun LoginForm() {
             singleLine = true
         )
 
-        // Campo de texto para el Password
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+        // Texto debajo del campo
+        Text(
+            text = "Se le enviará un correo para cambiar su contraseña.",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(top = 8.dp)
         )
 
-        // Botón de "Sign In"
+        // Botón de "Enviar correo"
         Button(
             onClick = {
-                // Acción de inicio de sesión aquí
+                // Acción para enviar correo
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,25 +128,13 @@ fun LoginForm() {
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(text = "Sign In",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground)
+            Text(text = "Enviar correo")
         }
-
-        // Enlace para "Forgot password?"
-        Text(
-            text = "Forgot password?",
-            modifier = Modifier.clickable {
-                // Acción para "Forgot password?"
-            },
-            color = Color.Blue,
-            textDecoration = TextDecoration.Underline
-        )
     }
 }
 
-@Composable
 @Preview
-fun LogUserPreview() {
-    LogUser()
+@Composable
+fun PreviewSimplifiedLogUser() {
+    SimplifiedLogUser()
 }
