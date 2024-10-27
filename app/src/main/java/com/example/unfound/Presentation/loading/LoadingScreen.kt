@@ -1,4 +1,4 @@
-package com.example.unfound.loading
+package com.example.unfound.Presentation.loading
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

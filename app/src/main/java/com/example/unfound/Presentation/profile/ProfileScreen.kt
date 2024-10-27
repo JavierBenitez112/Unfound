@@ -1,4 +1,4 @@
-package com.example.unfound.profile
+package com.example.unfound.Presentation.profile
 
 
 import androidx.compose.foundation.Image
@@ -20,7 +20,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
@@ -56,17 +59,33 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unfound.R
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
+
+@Composable
+fun ProfileRoute(
+    onBackClick: () -> Unit
+) {
+    ProfileScreen(
+        onBackClick = onBackClick,
+        modifier = Modifier.fillMaxSize()
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit
+) {
     val visitedPlaces = listOf(
-        // Ejemplo de lugares visitados
         VisitedPlace("Restaurante Giratorio", "Reseña del restaurante", R.drawable.image1, 4),
         VisitedPlace("Zoologico La Aurora", "Reseña del zoologico", R.drawable.image8, 5),
-        )
-    var userName by remember { mutableStateOf("Juan Fransisco") }
+    )
+    var userName by remember { mutableStateOf("Juan Francisco") }
+    var isEditing by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
         topBar = {
@@ -85,12 +104,7 @@ fun ProfileScreen() {
                 },
                 navigationIcon = {
                     IconButton(onClick = { /* Acción de menú */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* Acción de usuario */ }) {
-                        Icon(Icons.Default.Person, contentDescription = "User Icon")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Menu")
                     }
                 }
             )
@@ -104,7 +118,6 @@ fun ProfileScreen() {
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Imagen de perfil
                 Image(
                     painter = painterResource(id = R.drawable.profile), // Cambia por tu recurso de imagen
                     contentDescription = "Profile Picture",
@@ -116,24 +129,41 @@ fun ProfileScreen() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Nombre del usuario editable con un ícono
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    IconButton(onClick = { /* Acción para cambiar el nombre */ }) {
+                    if (isEditing) {
+                        OutlinedTextField(
+                            value = userName,
+                            onValueChange = { userName = it },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(0.8f),
+                            placeholder = { Text("Introduce tu nombre") },
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    isEditing = false
+                                    keyboardController?.hide()
+                                }
+                            )
+                        )
+                    } else {
+                        Text(
+                            text = userName,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
+                    IconButton(
+                        onClick = { isEditing = !isEditing } // Alterna entre vista y edición
+                    ) {
                         Icon(Icons.Default.Edit, contentDescription = "Edit Name")
                     }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Botón para cambiar la foto de perfil
                 Button(
                     onClick = { /* Acción de cambiar foto */ },
                     colors = ButtonDefaults.buttonColors(
@@ -153,7 +183,6 @@ fun ProfileScreen() {
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Texto para "Lugares visitados"
                 Text(
                     text = "Lugares visitados",
                     style = MaterialTheme.typography.bodyMedium,
@@ -162,7 +191,6 @@ fun ProfileScreen() {
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // LazyColumn para mostrar los lugares visitados
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -258,6 +286,9 @@ data class VisitedPlace(
 @Composable
 fun PreviewProfileScreen() {
     MaterialTheme {
-        ProfileScreen()
+        ProfileScreen(
+            modifier = Modifier.fillMaxSize(),
+            onBackClick = { /* Acción de cerrar sesión */ }
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.example.unfound.log
+package com.example.unfound.Presentation.signUp
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,7 +37,19 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun SimplifiedLogUser() {
+fun SignUpRoute(
+    onSignUpClick: () -> Unit,
+){
+    SignUpScreen(
+        onSignUpClick = onSignUpClick,
+    )
+}
+
+@Composable
+fun SignUpScreen(
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,19 +58,19 @@ fun SimplifiedLogUser() {
         verticalArrangement = Arrangement.Center
     ) {
 
-        // Caja con el texto UNFOUND
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)
+                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center // Centrar contenido
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+
+                ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -71,29 +83,35 @@ fun SimplifiedLogUser() {
                         )
                     )
                 )
+
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Logo
         Image(
             painter = painterResource(id = R.drawable.unfoundbg),
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )
+        // Llamada a la función LoginForm
+        SignForm(
+            onSignUpClick = onSignUpClick,
+        )
+    }}
 
-        // Formulario simplificado
-        SimplifiedLoginForm()
-    }
-}
 
 @Composable
-fun SimplifiedLoginForm() {
+fun SignForm(
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
+
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -109,17 +127,22 @@ fun SimplifiedLoginForm() {
             singleLine = true
         )
 
-        // Texto debajo del campo
-        Text(
-            text = "Se le enviará un correo para cambiar su contraseña.",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(top = 8.dp)
+        // Campo de texto para el Password
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            visualTransformation = PasswordVisualTransformation(),
+            singleLine = true
         )
 
-        // Botón de "Enviar correo"
+
         Button(
             onClick = {
-                // Acción para enviar correo
+                onSignUpClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,13 +151,18 @@ fun SimplifiedLoginForm() {
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(text = "Enviar correo")
+            Text(text = "Sign Up",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground)
         }
+
     }
 }
 
-@Preview
 @Composable
-fun PreviewSimplifiedLogUser() {
-    SimplifiedLogUser()
+@Preview
+fun SignUpScreenPreview() {
+    SignUpScreen(
+        onSignUpClick = {}
+    )
 }
