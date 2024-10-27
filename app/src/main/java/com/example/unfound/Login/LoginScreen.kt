@@ -21,20 +21,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.unfound.R
 
-
 @Composable
-fun LoginScreen1() {
+fun LoginScreen1(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,19 +39,17 @@ fun LoginScreen1() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
+                .border(8.dp, MaterialTheme.colorScheme.primary)
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center // Centrar contenido
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-
             ) {
                 Text(
                     text = "UNFOUND",
@@ -77,7 +72,6 @@ fun LoginScreen1() {
             }
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
         Image(
             painter = painterResource(id = R.drawable.unfoundbg),
@@ -85,7 +79,6 @@ fun LoginScreen1() {
             modifier = Modifier.size(250.dp)
         )
 
-        // Botones de Login y Crear cuenta modificar accion despues para redirigir a la pantalla de login
         Spacer(modifier = Modifier.height(32.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -93,7 +86,10 @@ fun LoginScreen1() {
         ) {
             // Botón de Login
             Button(
-                onClick = { /* Acción de login */ },
+                onClick = {
+                    // Aquí navegas a la pantalla de Login si tienes una pantalla de Login separada
+                    navController.navigate("login")
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
@@ -103,28 +99,34 @@ fun LoginScreen1() {
                     contentDescription = "Login Icon",
                     tint = MaterialTheme.colorScheme.onBackground
                 )
-                Text(text = "Login",
+                Text(
+                    text = "Login",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground)
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
             // Botón de Create Account
             Button(
-                onClick = { /* Acción de crear cuenta */ },
+                onClick = {
+                    // Navega a la pantalla de creación de cuenta
+                    navController.navigate("signup")
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Text(text = "Create Account",
+                Text(
+                    text = "Create Account",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground)
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
         }
     }
 }
 
-
 @Composable
 @Preview
 fun LoginScreenPreview1() {
-    LoginScreen1()
+
 }

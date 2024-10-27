@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -26,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,10 +34,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.unfound.R
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,16 +50,15 @@ fun SignUpScreen() {
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
+                .border(8.dp, MaterialTheme.colorScheme.primary)
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center // Centrar contenido
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-
-                ) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -71,7 +71,6 @@ fun SignUpScreen() {
                         )
                     )
                 )
-
             }
         }
 
@@ -82,24 +81,23 @@ fun SignUpScreen() {
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )
-        // Llamada a la función LoginForm
-        SignForm()
-    }}
 
+        // Llamada a la función SignForm con el NavController
+        SignForm(navController)
+    }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SignForm() {
+fun SignForm(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
-
-            .padding(16.dp),
+        modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Campo de texto para el Email
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -110,7 +108,6 @@ fun SignForm() {
             singleLine = true
         )
 
-        // Campo de texto para el Password
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -122,10 +119,9 @@ fun SignForm() {
             singleLine = true
         )
 
-        // Botón de "Sign In"
         Button(
             onClick = {
-                // Acción de inicio de sesión aquí
+                // Acción para el registro
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -134,15 +130,35 @@ fun SignForm() {
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(text = "Sign Up",
+            Text(
+                text = "Sign Up",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground)
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Texto para volver al Login
+        Text(
+            text = "Already have an account? Login",
+            style = MaterialTheme.typography.bodySmall.copy(
+                textDecoration = TextDecoration.Underline
+            ),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .clickable {
+                    // Navegar de regreso a LoginScreen1
+                    navController.navigate("login")
+                }
+                .padding(top = 16.dp)
+        )
     }
 }
 
 @Composable
 @Preview
 fun SignUpScreenPreview() {
-    SignUpScreen()}
+    // Usamos rememberNavController solo para la vista previa si es necesario.
+    // SignUpScreen(navController = rememberNavController())
+}

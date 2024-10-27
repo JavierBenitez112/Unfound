@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingScreen() {
+fun LoadingScreen(onLoadingComplete: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -47,6 +47,9 @@ fun LoadingScreen() {
 @Composable
 fun PreviewLoadingScreen() {
     MaterialTheme {
-        LoadingScreen()
+        LoadingScreen {
+            // Cambia el estado a false cuando termine la carga
+            isLoading = false
+        }
     }
 }
