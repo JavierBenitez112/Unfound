@@ -27,11 +27,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.unfound.R
 
 @Composable
-fun LoginScreen1(navController: NavController) {
+fun LoginRoute(
+    onLoginClick: () -> Unit,
+) {
+    LoginScreen(
+        onLoginClick = onLoginClick,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@Composable
+private fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onLoginClick: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,18 +51,20 @@ fun LoginScreen1(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)
+                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center // Centrar contenido
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+
+                ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -72,6 +86,7 @@ fun LoginScreen1(navController: NavController) {
             }
         }
 
+
         Spacer(modifier = Modifier.height(16.dp))
         Image(
             painter = painterResource(id = R.drawable.unfoundbg),
@@ -79,6 +94,7 @@ fun LoginScreen1(navController: NavController) {
             modifier = Modifier.size(250.dp)
         )
 
+        // Botones de Login y Crear cuenta modificar accion despues para redirigir a la pantalla de login
         Spacer(modifier = Modifier.height(32.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -86,10 +102,7 @@ fun LoginScreen1(navController: NavController) {
         ) {
             // Botón de Login
             Button(
-                onClick = {
-                    // Aquí navegas a la pantalla de Login si tienes una pantalla de Login separada
-                    navController.navigate("login")
-                },
+                onClick = { /* Acción de login */ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
@@ -99,34 +112,28 @@ fun LoginScreen1(navController: NavController) {
                     contentDescription = "Login Icon",
                     tint = MaterialTheme.colorScheme.onBackground
                 )
-                Text(
-                    text = "Login",
+                Text(text = "Login",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                    color = MaterialTheme.colorScheme.onBackground)
             }
             // Botón de Create Account
             Button(
-                onClick = {
-                    // Navega a la pantalla de creación de cuenta
-                    navController.navigate("signup")
-                },
+                onClick = { /* Acción de crear cuenta */ },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Text(
-                    text = "Create Account",
+                Text(text = "Create Account",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                    color = MaterialTheme.colorScheme.onBackground)
             }
         }
     }
 }
 
+
 @Composable
 @Preview
 fun LoginScreenPreview1() {
-
+    LoginScreen(onLoginClick = {})  // Lambda vacía para onLoginClick
 }

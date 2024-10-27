@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingScreen(onLoadingComplete: () -> Unit) {
+fun LoadingScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -33,7 +33,7 @@ fun LoadingScreen(onLoadingComplete: () -> Unit) {
 
             androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(16.dp))
 
-            
+
             Text(
                 text = "Cargando...",
                 style = MaterialTheme.typography.bodyLarge,
@@ -47,9 +47,6 @@ fun LoadingScreen(onLoadingComplete: () -> Unit) {
 @Composable
 fun PreviewLoadingScreen() {
     MaterialTheme {
-        LoadingScreen {
-            // Cambia el estado a false cuando termine la carga
-            isLoading = false
-        }
+        LoadingScreen()
     }
 }

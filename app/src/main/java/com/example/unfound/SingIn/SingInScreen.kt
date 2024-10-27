@@ -1,9 +1,17 @@
-package com.example.unfound.signUp
+package com.example.unfound.SignIn
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -17,17 +25,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unfound.R
-import com.example.unfound.log.data.User
 
 @Composable
-fun SignUpScreen(onSignUpClick: () -> Unit) {
+fun SignInScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,6 +44,7 @@ fun SignUpScreen(onSignUpClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Box(
             modifier = Modifier
                 .padding(16.dp)
@@ -43,18 +53,23 @@ fun SignUpScreen(onSignUpClick: () -> Unit) {
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "UNFOUND",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.displayLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    shadow = Shadow(
-                        color = MaterialTheme.colorScheme.onBackground,
-                        offset = Offset(2f, 2f),
-                        blurRadius = 5f
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "UNFOUND",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.displayLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        shadow = Shadow(
+                            color = MaterialTheme.colorScheme.onBackground,
+                            offset = Offset(2f, 2f),
+                            blurRadius = 5f
+                        )
                     )
                 )
-            )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -65,32 +80,21 @@ fun SignUpScreen(onSignUpClick: () -> Unit) {
             modifier = Modifier.size(175.dp)
         )
 
-        SignForm(onSignUpClick = onSignUpClick) // Pasa la función de navegación aquí
+        SignInForm()
     }
 }
 
 @Composable
-fun SignForm(onSignUpClick: () -> Unit) {
-    var name by remember { mutableStateOf("") }
+fun SignInForm() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var imageUrl by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = { Text("Name") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
-
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -112,29 +116,9 @@ fun SignForm(onSignUpClick: () -> Unit) {
             singleLine = true
         )
 
-        OutlinedTextField(
-            value = imageUrl,
-            onValueChange = { imageUrl = it },
-            label = { Text("Image URL (optional)") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            singleLine = true
-        )
-
         Button(
             onClick = {
-                // Crear una instancia de User
-                val newUser = User(
-                    name = name,
-                    imageUrl = imageUrl,
-                    email = email,
-                    password = password
-                )
-                // Aquí puedes manejar la lógica de registro con newUser
-
-                // Navega a HomeScreen
-                onSignUpClick()
+                // Acción de inicio de sesión aquí
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -144,16 +128,25 @@ fun SignForm(onSignUpClick: () -> Unit) {
             )
         ) {
             Text(
-                text = "Sign Up",
+                text = "Sign In",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+
+        Text(
+            text = "Forgot Password?",
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = Color.Blue,
+                textDecoration = TextDecoration.Underline
+            ),
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
     }
 }
 
 @Composable
 @Preview
-fun SignUpScreenPreview() {
-    SignUpScreen(onSignUpClick = {}) // Proporciona un lambda vacío para la vista previa
+fun SignInScreenPreview() {
+    SignInScreen()
 }

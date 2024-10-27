@@ -1,27 +1,11 @@
-package com.example.unfound.Home
-
+package com.example.unfound.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +20,7 @@ import com.example.unfound.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -90,7 +74,7 @@ fun HomeScreen(modifier: Modifier) {
                 ) {
                     // Título
                     Text(
-                        text = "¿Que vamos a hacer hoy?",
+                        text = "¿Qué vamos a hacer hoy?",
                         style = TextStyle(
                             fontSize = 28.sp,
                             fontWeight = FontWeight.Bold
@@ -149,5 +133,5 @@ fun HomeScreen(modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(modifier = Modifier)
+    HomeScreen()
 }
