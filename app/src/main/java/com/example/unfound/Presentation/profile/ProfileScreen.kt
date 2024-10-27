@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
@@ -62,9 +63,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
 
+@Composable
+fun ProfileRoute(
+    onBackClick: () -> Unit
+) {
+    ProfileScreen(
+        onBackClick = onBackClick,
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit
+) {
     val visitedPlaces = listOf(
         VisitedPlace("Restaurante Giratorio", "Reseña del restaurante", R.drawable.image1, 4),
         VisitedPlace("Zoologico La Aurora", "Reseña del zoologico", R.drawable.image8, 5),
@@ -90,12 +104,7 @@ fun ProfileScreen() {
                 },
                 navigationIcon = {
                     IconButton(onClick = { /* Acción de menú */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* Acción de usuario */ }) {
-                        Icon(Icons.Default.Person, contentDescription = "User Icon")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Menu")
                     }
                 }
             )
@@ -277,6 +286,9 @@ data class VisitedPlace(
 @Composable
 fun PreviewProfileScreen() {
     MaterialTheme {
-        ProfileScreen()
+        ProfileScreen(
+            modifier = Modifier.fillMaxSize(),
+            onBackClick = { /* Acción de cerrar sesión */ }
+        )
     }
 }

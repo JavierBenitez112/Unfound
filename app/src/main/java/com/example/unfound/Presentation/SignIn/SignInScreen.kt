@@ -37,7 +37,21 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun SignInScreen() {
+fun SignInRoute(
+    onSignInClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
+) {
+    SignInScreen(
+        onSignInClick = onSignInClick,
+        onForgotPasswordClick = onForgotPasswordClick
+    )
+}
+
+@Composable
+fun SignInScreen(
+    onSignInClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -81,12 +95,18 @@ fun SignInScreen() {
             modifier = Modifier.size(175.dp)
         )
 
-        SignInForm()
+        SignInForm(
+            onSignInClick = onSignInClick,
+            onForgotPasswordClick = onForgotPasswordClick
+        )
     }
 }
 
 @Composable
-fun SignInForm() {
+fun SignInForm(
+    onSignInClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -119,7 +139,7 @@ fun SignInForm() {
 
         Button(
             onClick = {
-                // Acción de inicio de sesión aquí
+                onSignInClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -141,13 +161,19 @@ fun SignInForm() {
                 color = Color.Blue,
                 textDecoration = TextDecoration.Underline
             ),
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable { onForgotPasswordClick() }
         )
     }
 }
 
+
 @Composable
 @Preview
 fun SignInScreenPreview() {
-    SignInScreen()
+    SignInScreen(
+        onSignInClick = {},
+        onForgotPasswordClick = {}
+    )
 }

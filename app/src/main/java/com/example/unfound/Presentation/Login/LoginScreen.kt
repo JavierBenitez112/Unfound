@@ -32,9 +32,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
+@Composable
+fun LoginRoute(
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
+    LoginScreen1(
+        onLoginClick = onLoginClick,
+        onSignUpClick = onSignUpClick
+    )
+}
 
 @Composable
-fun LoginScreen1() {
+fun LoginScreen1(
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -93,7 +106,7 @@ fun LoginScreen1() {
         ) {
             // Botón de Login
             Button(
-                onClick = { /* Acción de login */ },
+                onClick = { onLoginClick() },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
@@ -109,7 +122,7 @@ fun LoginScreen1() {
             }
             // Botón de Create Account
             Button(
-                onClick = { /* Acción de crear cuenta */ },
+                onClick = { onSignUpClick() },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
@@ -126,5 +139,8 @@ fun LoginScreen1() {
 @Composable
 @Preview
 fun LoginScreenPreview1() {
-    LoginScreen1()
+    LoginScreen1(
+        onLoginClick = {},
+        onSignUpClick = {}
+    )
 }

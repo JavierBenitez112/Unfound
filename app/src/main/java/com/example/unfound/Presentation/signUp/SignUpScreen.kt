@@ -37,7 +37,19 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun SignUpScreen() {
+fun SignUpRoute(
+    onSignUpClick: () -> Unit,
+){
+    SignUpScreen(
+        onSignUpClick = onSignUpClick,
+    )
+}
+
+@Composable
+fun SignUpScreen(
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,12 +95,17 @@ fun SignUpScreen() {
             modifier = Modifier.size(175.dp)
         )
         // Llamada a la función LoginForm
-        SignForm()
+        SignForm(
+            onSignUpClick = onSignUpClick,
+        )
     }}
 
 
 @Composable
-fun SignForm() {
+fun SignForm(
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -122,10 +139,10 @@ fun SignForm() {
             singleLine = true
         )
 
-        // Botón de "Sign In"
+
         Button(
             onClick = {
-                // Acción de inicio de sesión aquí
+                onSignUpClick()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -145,5 +162,7 @@ fun SignForm() {
 @Composable
 @Preview
 fun SignUpScreenPreview() {
-    SignUpScreen()
+    SignUpScreen(
+        onSignUpClick = {}
+    )
 }

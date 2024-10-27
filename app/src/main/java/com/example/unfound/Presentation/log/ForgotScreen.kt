@@ -1,9 +1,9 @@
 package com.example.unfound.Presentation.log
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,18 +26,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun SimplifiedLogUser() {
+fun ForgotRoute() {
+    ForgotScreen()
+}
+
+@Composable
+fun ForgotScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,13 +85,14 @@ fun SimplifiedLogUser() {
             modifier = Modifier.size(175.dp)
         )
 
-        SimplifiedLoginForm()
+        ForgotForm()
     }
 }
 
 @Composable
-fun SimplifiedLoginForm() {
+fun ForgotForm() {
     var email by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -117,6 +121,7 @@ fun SimplifiedLoginForm() {
         Button(
             onClick = {
                 // Acción para enviar correo
+                Toast.makeText(context, "Correo enviado", Toast.LENGTH_SHORT).show()
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,5 +138,5 @@ fun SimplifiedLoginForm() {
 @Preview
 @Composable
 fun PreviewSimplifiedLogUser() {
-    SimplifiedLogUser()
+    ForgotScreen()
 }
