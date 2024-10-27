@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.example.unfound.Home.HomeScreen
-import com.example.unfound.Map.MapScreen1
-import com.example.unfound.SignIn.SignInScreen
-import com.example.unfound.loading.LoadingScreen
-import com.example.unfound.profile.ProfileScreen
+import com.example.unfound.Presentation.Home.HomeScreen
+import com.example.unfound.Presentation.Map.MapScreen1
+import com.example.unfound.Presentation.SignIn.SignInScreen
+import com.example.unfound.Presentation.loading.LoadingScreen
+import com.example.unfound.Presentation.profile.ProfileScreen
 import com.example.unfound.ui.theme.UnfoundTheme
 
 class MainActivity : ComponentActivity() {

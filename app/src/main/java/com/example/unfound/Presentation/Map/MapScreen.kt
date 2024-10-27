@@ -1,4 +1,4 @@
-package com.example.unfound.Map
+package com.example.unfound.Presentation.Map
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

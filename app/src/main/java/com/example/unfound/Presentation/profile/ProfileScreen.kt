@@ -1,4 +1,4 @@
-package com.example.unfound.profile
+package com.example.unfound.Presentation.profile
 
 
 import androidx.compose.foundation.Image

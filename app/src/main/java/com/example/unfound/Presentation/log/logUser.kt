@@ -1,4 +1,4 @@
-package com.example.unfound.SignIn
+package com.example.unfound.Presentation.log
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 
 @Composable
-fun SignInScreen() {
+fun SimplifiedLogUser() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +56,7 @@ fun SignInScreen() {
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "UNFOUND",
@@ -75,20 +75,20 @@ fun SignInScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Logo
         Image(
             painter = painterResource(id = R.drawable.unfoundbg),
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )
 
-        SignInForm()
+        SimplifiedLoginForm()
     }
 }
 
 @Composable
-fun SignInForm() {
+fun SimplifiedLoginForm() {
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -106,20 +106,17 @@ fun SignInForm() {
             singleLine = true
         )
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+        // Texto debajo del campo
+        Text(
+            text = "Se le enviará un correo para cambiar su contraseña.",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.padding(top = 8.dp)
         )
 
+        // Botón de "Enviar correo"
         Button(
             onClick = {
-                // Acción de inicio de sesión aquí
+                // Acción para enviar correo
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,26 +125,13 @@ fun SignInForm() {
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(
-                text = "Sign In",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            Text(text = "Enviar correo")
         }
-
-        Text(
-            text = "Forgot Password?",
-            style = MaterialTheme.typography.bodySmall.copy(
-                color = Color.Blue,
-                textDecoration = TextDecoration.Underline
-            ),
-            modifier = Modifier.padding(vertical = 8.dp)
-        )
     }
 }
 
-@Composable
 @Preview
-fun SignInScreenPreview() {
-    SignInScreen()
+@Composable
+fun PreviewSimplifiedLogUser() {
+    SimplifiedLogUser()
 }
