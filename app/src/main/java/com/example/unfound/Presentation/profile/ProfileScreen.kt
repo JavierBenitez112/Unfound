@@ -61,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import com.example.unfound.Data.source.VisitedPlacesDb
 
 
 @Composable
@@ -79,11 +80,8 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit
 ) {
-    val visitedPlaces = listOf(
-        VisitedPlace("Restaurante Giratorio", "Reseña del restaurante", R.drawable.image1, 4),
-        VisitedPlace("Zoologico La Aurora", "Reseña del zoologico", R.drawable.image8, 5),
-    )
-    var userName by remember { mutableStateOf("Juan Francisco") }
+    val visitedPlaces = VisitedPlacesDb.getAllPlaces()
+    var userName by remember { mutableStateOf("Cambiar Nombre") }
     var isEditing by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -96,21 +94,21 @@ fun ProfileScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.unfoundbg), // Cambia por tu logo
+                            painter = painterResource(id = R.drawable.unfoundbg),
                             contentDescription = "Logo",
                             modifier = Modifier.size(50.dp)
                         )
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Acción de menú */ }) {
+                    IconButton(onClick = { onBackClick() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Menu")
                     }
                 }
             )
         },
         content = { paddingValues ->
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
@@ -118,90 +116,88 @@ fun ProfileScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.profile), // Cambia por tu recurso de imagen
-                    contentDescription = "Profile Picture",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    if (isEditing) {
-                        OutlinedTextField(
-                            value = userName,
-                            onValueChange = { userName = it },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(0.8f),
-                            placeholder = { Text("Introduce tu nombre") },
-                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    isEditing = false
-                                    keyboardController?.hide()
-                                }
-                            )
-                        )
-                    } else {
-                        Text(
-                            text = userName,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                    }
-                    IconButton(
-                        onClick = { isEditing = !isEditing } // Alterna entre vista y edición
-                    ) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit Name")
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { /* Acción de cambiar foto */ },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    modifier = Modifier.padding(8.dp),
-                    shape = RoundedCornerShape(16.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit Icon"
+                item {
+                    Image(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Profile Picture",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = "Cambiar foto de perfil")
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        if (isEditing) {
+                            OutlinedTextField(
+                                value = userName,
+                                onValueChange = { userName = it },
+                                singleLine = true,
+                                modifier = Modifier.fillMaxWidth(0.8f),
+                                placeholder = { Text("Introduce tu nombre") },
+                                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        isEditing = false
+                                        keyboardController?.hide()
+                                    }
+                                )
+                            )
+                        } else {
+                            Text(
+                                text = userName,
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                        }
+                        IconButton(
+                            onClick = { isEditing = !isEditing }
+                        ) {
+                            Icon(Icons.Default.Edit, contentDescription = "Edit Name")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = { /* Acción de cambiar foto */ },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surface,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.padding(8.dp),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit Icon"
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = "Cambiar foto de perfil")
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Lugares visitados",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Lugares visitados",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    items(visitedPlaces) { place ->
-                        VisitedPlaceCard(
-                            name = place.name,
-                            description = place.description,
-                            imageResId = place.imageResId,
-                            starCount = place.starCount
-                        )
-                    }
+                items(visitedPlaces) { place ->
+                    VisitedPlaceCard(
+                        name = place.name,
+                        description = place.description,
+                        imageResId = place.imageResId,
+                        starCount = place.starCount
+                    )
                 }
             }
         }
@@ -227,7 +223,6 @@ fun VisitedPlaceCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // Nombre del lugar
             Text(
                 text = name,
                 style = MaterialTheme.typography.titleLarge,
@@ -235,7 +230,6 @@ fun VisitedPlaceCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            // Descripción del lugar
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
@@ -244,7 +238,6 @@ fun VisitedPlaceCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            // Imagen del lugar
             Image(
                 painter = painterResource(id = imageResId),
                 contentDescription = null,
@@ -255,7 +248,6 @@ fun VisitedPlaceCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Estrellas de valoración
             Row(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 horizontalArrangement = Arrangement.Center
@@ -273,22 +265,13 @@ fun VisitedPlaceCard(
     }
 }
 
-
-data class VisitedPlace(
-    val name: String,
-    val description: String,
-    val imageResId: Int,
-    val starCount: Int
-)
-
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewProfileScreen() {
     MaterialTheme {
         ProfileScreen(
             modifier = Modifier.fillMaxSize(),
-            onBackClick = { /* Acción de cerrar sesión */ }
+            onBackClick = {}
         )
     }
 }

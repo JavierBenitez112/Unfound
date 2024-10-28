@@ -1,5 +1,6 @@
 package com.example.unfound.Presentation.SignIn
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,13 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.unfound.Data.source.UserCredentialsDb
 import com.example.unfound.R
+
 
 @Composable
 fun SignInRoute(
@@ -109,6 +113,7 @@ fun SignInForm(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -139,7 +144,11 @@ fun SignInForm(
 
         Button(
             onClick = {
-                onSignInClick()
+                if (UserCredentialsDb.isValid(email, password)) {
+                    onSignInClick()
+                } else {
+                    Toast.makeText(context, "Credenciales Invalidas", Toast.LENGTH_SHORT).show()
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -167,7 +176,6 @@ fun SignInForm(
         )
     }
 }
-
 
 @Composable
 @Preview

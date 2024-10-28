@@ -4,12 +4,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
-import com.example.unfound.Presentation.Login.LoginDestination
 import com.example.unfound.Presentation.Map.MapDestination
 import com.example.unfound.Presentation.Map.MapScreen
-import com.example.unfound.Presentation.SignIn.SignInScreen
-import com.example.unfound.Presentation.profile.profileScreen
-import com.example.unfound.Presentation.signUp.signUpScreen
+import com.example.unfound.Presentation.profile.ProfileScreen
+import com.example.unfound.Presentation.profile.navigateToProfileScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -27,8 +25,12 @@ fun NavGraphBuilder.HomeGraph(
     navigation<HomeNavGraph>(
         startDestination = MapDestination
     ){
-        MapScreen()
-        profileScreen(
+        MapScreen(
+            onProfileClick = {
+                navController.navigateToProfileScreen()
+            }
+        )
+        ProfileScreen(
             onBackClick = navController::navigateUp
         )
     }

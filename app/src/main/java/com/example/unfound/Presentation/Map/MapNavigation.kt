@@ -12,11 +12,11 @@ import kotlinx.serialization.Serializable
 data object MapDestination
 
 fun NavGraphBuilder.MapScreen(
-
+    onProfileClick: () -> Unit
 ) {
     composable<MapDestination> {
         MapRoute(
-
+            onProfileClick = onProfileClick
         )
     }
 }

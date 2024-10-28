@@ -37,15 +37,18 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun MapRoute(
-
+    onProfileClick: () -> Unit,
 ) {
     MapScreen1(
+        onProfileClick = onProfileClick
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen1() {
+fun MapScreen1(
+    onProfileClick: () -> Unit
+) {
     val atasehir = LatLng(40.9971, 29.1007)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(atasehir, 15f)
@@ -73,13 +76,8 @@ fun MapScreen1() {
                         )
                     }
                 },
-                navigationIcon = {
-                    IconButton(onClick = { /* Acción de menú */ }) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
-                },
                 actions = {
-                    IconButton(onClick = { /* Acción de usuario */ }) {
+                    IconButton(onClick = { onProfileClick() }) {
                         Icon(Icons.Default.Person, contentDescription = "User Icon")
                     }
                 }
@@ -105,5 +103,7 @@ fun MapScreen1() {
 @Composable
 @Preview
 fun MapScreenPreview1() {
-    MapScreen1()
+    MapScreen1(
+        onProfileClick = {}
+    )
 }

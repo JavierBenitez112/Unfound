@@ -17,10 +17,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object SignMethodsNavGraph
 
-fun NavController.navigateLoginGraph(navOptions: NavOptions? = null) {
-    this.navigate(SignMethodsNavGraph, navOptions)
-}
-
 fun NavGraphBuilder.LoginGraph(
     navController: NavController
 ){
