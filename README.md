@@ -51,6 +51,3 @@ Para optimizar el desarrollo y el rendimiento de la aplicación, **Unfound** emp
 5. **Navigation**:
    - **`androidx.compose.navigation`**: Librería para gestionar la navegación entre pantallas en la app, garantizando una experiencia fluida y estructurada para el usuario.
 
-### Link del Repositorio
-
-El repositorio del proyecto contiene una carpeta en la raíz llamada **APK** donde se almacena el APK de cada entrega. Esto permite a los usuarios o revisores acceder y probar la app en sus dispositivos.
