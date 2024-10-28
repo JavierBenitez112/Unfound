@@ -21,11 +21,6 @@ en tiempo real. A continuación, se detallan los servicios y sus roles en la apl
  y localizadas de lugares cercanos al usuario. Este servicio permite que **Unfound** proporcione datos de ubicaciones específicas en tiempo real, considerando
  la posición actual del usuario, el tipo de lugar y la relevancia de las recomendaciones.
 
-4. **Datos de Lugares y Recomendaciones**: La aplicación realizará llamadas a una API de lugares adicional para obtener información complementaria
- de ubicaciones cercanas, ayudando a crear recomendaciones más diversas y actualizadas.
-
-5. **API Fake para Datos Adicionales**: En caso de no encontrar una API específica para ciertos datos (como el tipo de cocina, rango de precios, o
-  características del lugar), **Unfound** implementará una "API fake" o utilizará una base de datos local para simular estas respuestas y mantener la funcionalidad completa de la app.
 
 ### Base de Datos Local
 
