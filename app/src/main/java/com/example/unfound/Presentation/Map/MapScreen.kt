@@ -2,16 +2,23 @@ package com.example.unfound.Presentation.Map
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.unfound.Data.source.LocationsDb
 import com.example.unfound.R
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -49,9 +57,12 @@ fun MapRoute(
 fun MapScreen1(
     onProfileClick: () -> Unit
 ) {
-    val atasehir = LatLng(40.9971, 29.1007)
+    val locations = LocationsDb.getLocations()
+    val initialLocation = locations[0]
+    val newLocation = locations[1]
+
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(atasehir, 15f)
+        position = CameraPosition.fromLatLngZoom(LatLng(initialLocation.latitude, initialLocation.longitude), 15f)
     }
 
     var uiSettings by remember {
@@ -59,6 +70,9 @@ fun MapScreen1(
     }
     var properties by remember {
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+    }
+    var markerState by remember {
+        mutableStateOf(MarkerState(position = LatLng(initialLocation.latitude, initialLocation.longitude)))
     }
 
     Scaffold(
@@ -91,9 +105,35 @@ fun MapScreen1(
                     uiSettings = uiSettings
                 ) {
                     Marker(
-                        state = MarkerState(position = atasehir),
-                        title = "Si"
+                        state = markerState,
+                        title = initialLocation.name
                     )
+                }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp)
+                ) {
+                    Button(
+                        onClick = { /* Acción del primer botón */ },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Ir")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        onClick = {
+                            markerState = MarkerState(position = LatLng(newLocation.latitude, newLocation.longitude))
+                            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(newLocation.latitude, newLocation.longitude), 15f)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        )
+                    ) {
+                        Text("Otro Lugar")
+                    }
                 }
             }
         }
