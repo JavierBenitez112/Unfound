@@ -1,48 +1,41 @@
-Unfound - APP
+📍 Unfound - App
+Unfound es una aplicación móvil diseñada para quienes desean descubrir nuevos lugares recreativos de manera espontánea. Su objetivo es ofrecer recomendaciones únicas y personalizadas, utilizando la ubicación actual del usuario para presentar lugares cercanos que podrían ser de interés, desde parques y cafeterías hasta museos y miradores. La aplicación se enfoca en la autenticidad y en brindar experiencias nuevas que pueden ser compartidas en redes sociales.
 
+📖 Descripción
+Unfound es la aplicación ideal para quienes buscan romper la rutina y vivir experiencias únicas. Con una interfaz intuitiva y basada en la ubicación actual del usuario, ofrece recomendaciones de lugares recreativos únicos y personalizados. Desde cafeterías y parques hasta puntos turísticos, Unfound asegura que cada experiencia sea inesperada y emocionante.
 
-## Descripción de la App
+🔗 Servicios
+Unfound hace uso de varios servicios externos para proporcionar autenticación segura y acceso a datos en tiempo real. A continuación se listan los servicios empleados y su rol en la app:
 
-Es una aplicación diseñada para aquellos que buscan salir de la rutina diaria y valoran la exploración y la espontaneidad.
-Está dirigida a personas que a menudo se sienten abrumadas por la gran cantidad de opciones disponibles a la hora de elegir lugares para comer. 
+Firebase Authentication:
+Gestiona la autenticación de usuarios en la aplicación, permitiendo a cada usuario acceder a su cuenta personal de manera segura. Este servicio asegura que cada sesión esté protegida y que los datos del usuario se mantengan privados y vinculados a una cuenta específica.
 
-Esta app es ideal para quienes buscan nuevas experiencias y desean enriquecer sus vidas con aventuras emocionantes, ya sea disfrutando de lugares
-únicos o compartiendo momentos especiales en sus redes sociales. Con recomendaciones aleatorias, **Unfound** transforma cada salida en una 
-oportunidad para descubrir algo inesperado y único.
+Firebase Realtime Database:
+Utilizado para almacenar y sincronizar los datos de usuario, como preferencias de lugares y el historial de recomendaciones. Permite que los usuarios puedan acceder a sus preferencias personalizadas y que los datos se mantengan actualizados y sincronizados en tiempo real.
 
-Para enriquecer la experiencia del usuario, **Unfound** utiliza varios servicios externos que proporcionan autenticación y datos 
-en tiempo real. A continuación, se detallan los servicios y sus roles en la aplicación:
+Nearby Search de Google Places API:
+Este servicio de Google permite a Unfound realizar búsquedas de lugares cercanos a la ubicación del usuario en tiempo real. Utilizando la funcionalidad de Nearby Search, la app puede filtrar lugares por tipo (como “cafetería” o “parque”) y devolver una lista de opciones en función de la proximidad y relevancia.
 
+Place Details de Google Places API:
+Ofrece información adicional sobre cada lugar recomendado, incluyendo nombre, dirección, calificaciones, horarios y más. Esta funcionalidad mejora la experiencia del usuario, brindándole detalles útiles para decidir si quiere visitar el lugar sugerido.
 
-1. **Autenticación**: La app empleará un servicio de autenticación en línea para gestionar el inicio de sesión de los usuarios, asegurando que
- cada sesión esté protegida y vinculada a una cuenta única.
+📚 Librerías
+Para desarrollar y optimizar el rendimiento de Unfound, se utilizan varias librerías externas:
 
-2. **Nearby Search de Google Cloud**: A través de la **API de Google Cloud**, se implementa **Nearby Search** para obtener recomendaciones precisas
- y localizadas de lugares cercanos al usuario. Este servicio permite que **Unfound** proporcione datos de ubicaciones específicas en tiempo real, considerando
- la posición actual del usuario, el tipo de lugar y la relevancia de las recomendaciones.
+Jetpack Compose:
+Herramienta principal para el desarrollo de la interfaz de usuario, proporcionando una forma declarativa de crear una UI moderna, interactiva y eficiente.
 
+Retrofit:
+Utilizado para realizar llamadas a APIs de manera eficiente. Retrofit facilita el manejo de las solicitudes HTTP y es fundamental para realizar las llamadas a los servicios de Google Places y Firebase.
 
-### Base de Datos Local
+Coil:
+Biblioteca para la carga y visualización de imágenes. Al integrarse con la API de Google Places, permite cargar y mostrar imágenes de los lugares recomendados, proporcionando una experiencia visual rápida y fluida.
 
-Para mejorar la velocidad y asegurar la disponibilidad de ciertos datos sin conexión, **Unfound** incluirá una base de datos local. Esta base
-de datos almacenará información relevante, como datos de usuario, historial de recomendaciones, y configuraciones personales, permitiendo una experiencia más fluida.
+Room Database:
+Utilizado para el almacenamiento de datos localmente en el dispositivo del usuario, permitiendo acceder a las preferencias e historial de recomendaciones cuando la conexión a internet no está disponible. Room asegura que los datos críticos de usuario se mantengan accesibles en todo momento.
 
-### Librerías Externas
+Kotlin Serialization:
+Esta librería permite manejar la serialización y deserialización de datos en formato JSON, simplificando el intercambio de información con las APIs externas de Google y Firebase.
 
-Para optimizar el desarrollo y el rendimiento de la aplicación, **Unfound** emplea varias librerías externas:
-
-1. **Jetpack Compose**:
-   - **`androidx.compose.*`**: Utilizado para construir la interfaz de usuario de manera declarativa, optimizando el flujo de desarrollo y permitiendo una experiencia de usuario moderna y receptiva.
-   
-2. **Coil**:
-   - **`Coil`**: Librería para cargar imágenes desde internet de manera eficiente, ideal para mostrar fotos de los lugares recomendados de forma rápida y con caché integrado.
-
-3. **Mapbox Compose**:
-   - **`maps.compose`**: Se usa para integrar mapas interactivos en la app, permitiendo al usuario visualizar ubicaciones de manera dinámica y detallada.
-
-4. **Kotlin Serialization**:
-   - **`kotlinx.serialization.json`**: Permite manejar la serialización y deserialización de datos JSON, facilitando el intercambio de información con APIs externas.
-
-5. **Navigation**:
-   - **`androidx.compose.navigation`**: Librería para gestionar la navegación entre pantallas en la app, garantizando una experiencia fluida y estructurada para el usuario.
-
+Navigation Component de Jetpack Compose:
+Gestiona la navegación entre las diferentes pantallas de la aplicación, garantizando que los usuarios tengan una experiencia fluida y coherente al desplazarse por la app.
