@@ -36,9 +36,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.unfound.Data.source.UserCredentialsDb
 import com.example.unfound.R
-
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun SignInRoute(
@@ -63,7 +62,6 @@ fun SignInScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Box(
             modifier = Modifier
                 .padding(16.dp)
@@ -114,6 +112,7 @@ fun SignInForm(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val auth = FirebaseAuth.getInstance()
 
     Column(
         modifier = Modifier
@@ -144,11 +143,14 @@ fun SignInForm(
 
         Button(
             onClick = {
-                if (UserCredentialsDb.isValid(email, password)) {
-                    onSignInClick()
-                } else {
-                    Toast.makeText(context, "Credenciales Invalidas", Toast.LENGTH_SHORT).show()
-                }
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            onSignInClick()  // Llamada a la función después de inicio exitoso
+                        } else {
+                            Toast.makeText(context, "Authentication Failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
             },
             modifier = Modifier
                 .fillMaxWidth()

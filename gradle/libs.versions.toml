@@ -1,5 +1,6 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.0"
+firebaseBom = "33.5.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -16,10 +17,13 @@ uiTextGoogleFontsVersion = "1.7.4"
 navigationCompose = "2.8.0"
 kotlinSerialization = "1.6.3"
 places = "4.0.0"
+firebaseAuthKtx = "23.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-ui-text-google-fonts-v143 = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFontsVersion" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -40,6 +44,7 @@ secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.se
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref ="navigationCompose"}
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 
 
 [plugins]
