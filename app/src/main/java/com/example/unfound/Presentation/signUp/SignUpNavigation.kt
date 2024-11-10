@@ -1,5 +1,6 @@
 package com.example.unfound.Presentation.signUp
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
@@ -15,4 +16,8 @@ fun NavGraphBuilder.signUpScreen(
             onSignUpClick = onSignUpClick
         )
     }
+}
+
+private fun AnimatedContentScope.SignUpRoute(onSignUpClick: () -> Unit) {
+
 }
