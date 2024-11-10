@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "356343524729",
+    "project_id": "unfound-cef33",
+    "storage_bucket": "unfound-cef33.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:356343524729:android:3d06443178e463337993a8",
+        "android_client_info": {
+          "package_name": "com.example.unfound"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCa9pXsm8wpJoZ_JXb3mvEMiBMwZEnJ7F4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
