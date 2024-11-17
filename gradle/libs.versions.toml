@@ -1,26 +1,35 @@
 [versions]
-agp = "8.6.0"
-firebaseBom = "33.5.1"
+agp = "8.6.1"
+firebaseBom = "33.6.0"
 kotlin = "1.9.0"
-coreKtx = "1.13.1"
+coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.8.6"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.00"
+composeBom = "2024.11.00"
 mapsCompose = "4.3.3"
 playServicesMaps = "19.0.0"
 secretsGradlePlugin = "2.0.1"
-uiTextGoogleFonts = "1.7.4"
-uiTextGoogleFontsVersion = "1.7.4"
-navigationCompose = "2.8.0"
+uiTextGoogleFonts = "1.7.5"
+uiTextGoogleFontsVersion = "1.7.5"
+navigationCompose = "2.8.4"
 kotlinSerialization = "1.6.3"
-places = "4.0.0"
+places = "4.1.0"
 firebaseAuthKtx = "23.1.0"
 coil = "3.0.0-rc01"
 coilCompose = "2.7.0"
 coilComposeVersion = "3.0.0-rc01"
+firebase = "33.5.1"
+google-services = "4.4.2"
+splashScreen = "1.0.1"
+dataStore = "1.1.1"
+room = "2.6.1"
+ktor = "2.3.12"
+kotlinxCoroutinesPlayServices = "1.9.0"
+iconsExtended = "1.7.5"
+runner = "1.6.1"
 
 
 
@@ -54,10 +63,42 @@ firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx",
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeVersion" }
-
+androidx-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref="iconsExtended"}
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore"}
+androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+ktor-client-cio = { group = "io.ktor", name="ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name="ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { group = "io.ktor", name="ktor-client-core", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name="ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name="ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name="kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
+[bundles]
+ktor = [
+    "ktor-client-cio",
+    "ktor-client-content-negotiation",
+    "ktor-client-core",
+    "ktor-client-logging",
+    "ktor-serialization-kotlinx-json"
+]
+coil = [
+    "coil-compose",
+    "coil-network"
+]
+firebase-libs = [
+    "firebase-auth",
+    "firebase-firestore",
+    "kotlinx-coroutines-play-services"
+]
