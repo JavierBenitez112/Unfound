@@ -1,5 +1,7 @@
 package com.example.unfound.Presentation.Map
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -39,6 +41,7 @@ fun MapScreen1(
 
     val cameraPositionState = rememberCameraPositionState()
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(state.markerPosition) {
         state.markerPosition?.let { position ->
@@ -89,7 +92,14 @@ fun MapScreen1(
                         .padding(16.dp)
                 ) {
                     Button(
-                        onClick = { /* Acción del primer botón */ },
+                        onClick = {
+                            state.selectedPlace?.let { place ->
+                                val gmmIntentUri = Uri.parse("geo:0,0?q=${place.address}")
+                                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text("Ir")
@@ -101,7 +111,7 @@ fun MapScreen1(
                                 val randomPlace = state.placesList.random()
                                 val latLng = randomPlace.latLng
                                 if (latLng != null) {
-                                    viewModel.searchNearbyPlaces(latLng, 6000.0, listOf("restaurant", "tourist_attraction"))
+                                    viewModel.searchNearbyPlaces(latLng, 2000.0, listOf("restaurant", "tourist_attraction"))
                                 }
                             }
                         },
