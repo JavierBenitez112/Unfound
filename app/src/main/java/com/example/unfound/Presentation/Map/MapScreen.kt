@@ -1,78 +1,83 @@
 package com.example.unfound.Presentation.Map
 
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.unfound.Data.source.LocationsDb
 import com.example.unfound.R
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
-
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.CircularBounds
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPhotoRequest
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.libraries.places.api.net.SearchNearbyRequest
+import com.google.maps.android.compose.*
 
 @Composable
 fun MapRoute(
     onProfileClick: () -> Unit,
 ) {
     MapScreen1(
-        onProfileClick = onProfileClick
+        onProfileClick = onProfileClick,
+        placesClient = Places.createClient(LocalContext.current)
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen1(
+    placesClient: PlacesClient,
     onProfileClick: () -> Unit
 ) {
-    val locations = LocationsDb.getLocations()
-    val initialLocation = locations[0]
-    val newLocation = locations[1]
+    val cameraPositionState = rememberCameraPositionState()
+    var markerPosition by remember { mutableStateOf<LatLng?>(null) }
+    var selectedPlace by remember { mutableStateOf<Place?>(null) }
+    var placesList by remember { mutableStateOf<List<Place>>(emptyList()) }
+    var photoBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(initialLocation.latitude, initialLocation.longitude), 15f)
-    }
+    LaunchedEffect(Unit) {
+        val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+        val center = LatLng(14.603769, -90.489415)
+        val circle = CircularBounds.newInstance(center, 6000.0)
+        val includedTypes = listOf("restaurant","tourist_attraction")
 
-    var uiSettings by remember {
-        mutableStateOf(MapUiSettings(zoomControlsEnabled = true))
-    }
-    var properties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
-    }
-    var markerState by remember {
-        mutableStateOf(MarkerState(position = LatLng(initialLocation.latitude, initialLocation.longitude)))
+        val searchNearbyRequest = SearchNearbyRequest.builder(circle, placeFields)
+            .setIncludedTypes(includedTypes)
+            .setMaxResultCount(20)
+            .build()
+
+        placesClient.searchNearby(searchNearbyRequest)
+            .addOnSuccessListener { response ->
+                placesList = response.places
+                if (placesList.isNotEmpty()) {
+                    val randomPlace = placesList.random()
+                    val latLng = randomPlace.latLng
+                    if (latLng != null) {
+                        markerPosition = latLng
+                        cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
+                        fetchPlaceDetails(placesClient, randomPlace.id ?: "", setSelectedPlace = { selectedPlace = it }, setPhotoBitmap = { photoBitmap = it })
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("MapScreen1", "Place not found: ${exception.message}")
+            }
     }
 
     Scaffold(
@@ -84,7 +89,7 @@ fun MapScreen1(
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.unfoundbg), // Cambiar por el logo deseado
+                            painter = painterResource(id = R.drawable.unfoundbg),
                             contentDescription = "Logo",
                             modifier = Modifier.size(50.dp)
                         )
@@ -101,13 +106,15 @@ fun MapScreen1(
             Box(modifier = Modifier.padding(padding)) {
                 GoogleMap(
                     cameraPositionState = cameraPositionState,
-                    properties = properties,
-                    uiSettings = uiSettings
+                    properties = MapProperties(mapType = MapType.NORMAL),
+                    uiSettings = MapUiSettings(zoomControlsEnabled = true)
                 ) {
-                    Marker(
-                        state = markerState,
-                        title = initialLocation.name
-                    )
+                    markerPosition?.let { position ->
+                        Marker(
+                            state = MarkerState(position = position),
+                            title = "Ubicación seleccionada"
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier
@@ -124,8 +131,15 @@ fun MapScreen1(
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(
                         onClick = {
-                            markerState = MarkerState(position = LatLng(newLocation.latitude, newLocation.longitude))
-                            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(newLocation.latitude, newLocation.longitude), 15f)
+                            if (placesList.isNotEmpty()) {
+                                val randomPlace = placesList.random()
+                                val latLng = randomPlace.latLng
+                                if (latLng != null) {
+                                    markerPosition = latLng
+                                    cameraPositionState.position = CameraPosition.fromLatLngZoom(latLng, 15f)
+                                    fetchPlaceDetails(placesClient, randomPlace.id ?: "", setSelectedPlace = { selectedPlace = it }, setPhotoBitmap = { photoBitmap = it })
+                                }
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
@@ -135,15 +149,69 @@ fun MapScreen1(
                         Text("Otro Lugar")
                     }
                 }
+                selectedPlace?.let { place ->
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(16.dp)
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(8.dp)
+                    ) {
+                        Text(text = "Place ID: ${place.id}", style = MaterialTheme.typography.bodySmall)
+                        Text(text = place.name, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = "Direccion: ${place.address}", style = MaterialTheme.typography.bodySmall)
+                        photoBitmap?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Place Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     )
+}
+
+private fun fetchPlaceDetails(placesClient: PlacesClient, placeId: String, setSelectedPlace: (Place) -> Unit, setPhotoBitmap: (Bitmap?) -> Unit) {
+    val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHOTO_METADATAS)
+    val request = FetchPlaceRequest.newInstance(placeId, placeFields)
+
+    placesClient.fetchPlace(request)
+        .addOnSuccessListener { response ->
+            val place = response.place
+            setSelectedPlace(place)
+            val photoMetadata = place.photoMetadatas?.firstOrNull()
+            if (photoMetadata != null) {
+                val photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .build()
+                placesClient.fetchPhoto(photoRequest)
+                    .addOnSuccessListener { fetchPhotoResponse ->
+                        val bitmap = fetchPhotoResponse.bitmap
+                        setPhotoBitmap(bitmap)
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e("MapScreen1", "Photo not found: ${exception.message}")
+                        setPhotoBitmap(null)
+                    }
+            } else {
+                setPhotoBitmap(null)
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.e("MapScreen1", "Place not found: ${exception.message}")
+            setPhotoBitmap(null)
+        }
 }
 
 @Composable
 @Preview
 fun MapScreenPreview1() {
     MapScreen1(
+        placesClient = Places.createClient(LocalContext.current),
         onProfileClick = {}
     )
 }
