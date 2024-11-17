@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Define a variable to hold the Places API key.
-        val apiKey = "AIzaSyCN1OudTm0VY2ZgOhNc3gtYt0qSk7IE0v4"
+        val apiKey = "dummy"
 
         // Log an error if apiKey is not set.
         if (apiKey.isEmpty() || apiKey == "DEFAULT_API_KEY") {
