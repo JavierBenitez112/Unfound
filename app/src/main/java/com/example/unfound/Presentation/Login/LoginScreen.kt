@@ -98,13 +98,11 @@ fun LoginScreen1(
             modifier = Modifier.size(250.dp)
         )
 
-        // Botones de Login y Crear cuenta modificar accion despues para redirigir a la pantalla de login
         Spacer(modifier = Modifier.height(32.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Botón de Login
             Button(
                 onClick = { onLoginClick() },
                 colors = ButtonDefaults.buttonColors(

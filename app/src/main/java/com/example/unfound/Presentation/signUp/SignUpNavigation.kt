@@ -17,7 +17,3 @@ fun NavGraphBuilder.signUpScreen(
         )
     }
 }
-
-private fun AnimatedContentScope.SignUpRoute(onSignUpClick: () -> Unit) {
-
-}

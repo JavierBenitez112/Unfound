@@ -1,10 +1,12 @@
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     id("kotlin-kapt")
     id("com.google.gms.google-services") // Plugin de Google Services para Firebase
-
 }
 
 android {
@@ -22,11 +24,18 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+
+        buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
+
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -1,34 +1,60 @@
 package com.example.unfound.Presentation.Map
 
-import android.graphics.Bitmap
+import android.annotation.SuppressLint
+import android.app.Application
+import android.location.Location
+import androidx.lifecycle.*
+import com.example.unfound.Data.repository.PlaceRepository
+import com.example.unfound.Data.repository.Result
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.launch
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.unfound.Data.repository.PlaceRepository
-import com.example.unfound.Data.repository.Result
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.libraries.places.api.model.Place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+
 
 class MapScreenViewModel(
     private val placeRepository: PlaceRepository,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _state = MutableStateFlow(MapScreenState())
     val state: StateFlow<MapScreenState> = _state.asStateFlow()
 
+    private val _visitedPlaces = MutableStateFlow<List<Place>>(emptyList())
+    val visitedPlaces: StateFlow<List<Place>> = _visitedPlaces.asStateFlow()
+
+    private val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
+
     init {
-        searchNearbyPlaces(LatLng(14.603769, -90.489415), 6000.0, listOf("restaurant", "tourist_attraction"))
+        getUserLocation()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getUserLocation() {
+        viewModelScope.launch {
+            val locationTask: Task<Location> = fusedLocationClient.lastLocation
+            locationTask.addOnSuccessListener { location: Location? ->
+                location?.let {
+                    val userLatLng = LatLng(it.latitude, it.longitude)
+                    _state.value = _state.value.copy(markerPosition = userLatLng)
+                    searchNearbyPlaces(userLatLng, 1000.0, listOf("restaurant", "tourist_attraction"))
+                }
+            }
+        }
     }
 
     fun searchNearbyPlaces(center: LatLng, radius: Double, includedTypes: List<String>) {
@@ -81,6 +107,12 @@ class MapScreenViewModel(
         }
     }
 
+    fun addVisitedPlace(place: Place) {
+        viewModelScope.launch {
+            _visitedPlaces.value = _visitedPlaces.value + place
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -89,7 +121,8 @@ class MapScreenViewModel(
                 val repository = PlaceRepository(placesClient)
                 MapScreenViewModel(
                     placeRepository = repository,
-                    savedStateHandle = this.createSavedStateHandle()
+                    savedStateHandle = this.createSavedStateHandle(),
+                    application = context as Application
                 )
             }
         }

@@ -37,7 +37,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.unfound.R
 import androidx.compose.material3.MaterialTheme.typography as typography1
-
+@Composable
+fun SignUpRoute(
+    onSignUpClick: () -> Unit
+) {
+    SignUpScreen(
+        onSignUpClick = onSignUpClick
+    )
+}
 @Composable
 fun SignUpScreen(
     onSignUpClick: () -> Unit,
