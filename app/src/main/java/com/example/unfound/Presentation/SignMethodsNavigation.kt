@@ -45,11 +45,9 @@ fun NavGraphBuilder.LoginGraph(
             onNavigateBack = navController::navigateUp
         )
         signUpScreen(
-            onSignUpClick = {
-                navController.NavigateToMapGraph(
-                    navOptions = NavOptions.Builder().setPopUpTo<LoginDestination>(
-                        inclusive = true
-                    ).build()
+            onSignUpSuccess = {
+                navController.navigate("mapGraph",
+                    navOptions = NavOptions.Builder().setPopUpTo("loginDestination", inclusive = true).build()
                 )
             }
         )

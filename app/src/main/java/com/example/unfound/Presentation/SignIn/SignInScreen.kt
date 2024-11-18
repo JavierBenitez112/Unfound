@@ -1,9 +1,7 @@
 package com.example.unfound.Presentation.SignIn
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -18,7 +16,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.unfound.Data.repository.FirebaseAuthRepository
 import com.example.unfound.R
+import com.example.unfound.Presentation.SignIn.SignInViewModel
 
 @Composable
 fun SignInRoute(
@@ -35,7 +36,9 @@ fun SignInRoute(
 fun SignInScreen(
     onSignInClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
-    viewModel: SignInViewModel = SignInViewModel()
+    viewModel: SignInViewModel = viewModel(
+        factory = SignInViewModelFactory(FirebaseAuthRepository())
+    )
 ) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
@@ -118,7 +121,7 @@ fun SignInScreen(
                 text = (viewModel.signInState as SignInState.Error).message,
                 color = Color.Red
             )
-            is SignInState.Success -> { /* No hace nada, el éxito se maneja en onSignInClick */ }
+            is SignInState.Success -> {  }
             else -> Unit
         }
     }
