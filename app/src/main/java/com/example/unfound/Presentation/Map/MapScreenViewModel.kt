@@ -5,7 +5,9 @@ import android.app.Application
 import android.location.Location
 import androidx.lifecycle.*
 import com.example.unfound.Data.repository.PlaceRepository
-import com.example.unfound.Data.repository.Result
+import com.example.unfound.Data.Result
+import com.example.unfound.Data.Result.Success
+import com.example.unfound.Data.Result.Error
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -23,7 +25,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-
 
 class MapScreenViewModel(
     private val placeRepository: PlaceRepository,
@@ -60,7 +61,7 @@ class MapScreenViewModel(
     fun searchNearbyPlaces(center: LatLng, radius: Double, includedTypes: List<String>) {
         viewModelScope.launch {
             when (val result = placeRepository.searchNearbyPlaces(center, radius, includedTypes)) {
-                is Result.Success -> {
+                is Success -> {
                     _state.update { it.copy(placesList = result.data) }
                     if (result.data.isNotEmpty()) {
                         val randomPlace = result.data.random()
@@ -70,7 +71,7 @@ class MapScreenViewModel(
                         }
                     }
                 }
-                is Result.Error -> {
+                is Error -> {
                     // Handle error
                 }
             }
@@ -80,11 +81,11 @@ class MapScreenViewModel(
     fun fetchPlaceDetails(placeId: String) {
         viewModelScope.launch {
             when (val result = placeRepository.fetchPlaceDetails(placeId)) {
-                is Result.Success -> {
+                is Success -> {
                     _state.update { it.copy(selectedPlace = result.data) }
                     fetchPlacePhoto(result.data)
                 }
-                is Result.Error -> {
+                is Error -> {
                     // Handle error
                 }
             }
@@ -96,10 +97,10 @@ class MapScreenViewModel(
         if (photoMetadata != null) {
             viewModelScope.launch {
                 when (val result = placeRepository.fetchPlacePhoto(photoMetadata)) {
-                    is Result.Success -> {
+                    is Success -> {
                         _state.update { it.copy(photoBitmap = result.data) }
                     }
-                    is Result.Error -> {
+                    is Error -> {
                         // Handle error
                     }
                 }
@@ -109,7 +110,7 @@ class MapScreenViewModel(
 
     fun addVisitedPlace(place: Place) {
         viewModelScope.launch {
-            _visitedPlaces.value = _visitedPlaces.value + place
+            _visitedPlaces.value += place
         }
     }
 
@@ -122,7 +123,7 @@ class MapScreenViewModel(
                 MapScreenViewModel(
                     placeRepository = repository,
                     savedStateHandle = this.createSavedStateHandle(),
-                    application = context as Application
+                    application = context
                 )
             }
         }

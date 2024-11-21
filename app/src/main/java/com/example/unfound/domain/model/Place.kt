@@ -1,6 +1,6 @@
-package com.example.unfound.Data.local.entity
+package com.example.unfound.domain.model
 
-data class PlaceModel(
+data class Place(
     val id: String,
     val name: String,
     val address: String,

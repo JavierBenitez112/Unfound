@@ -2,6 +2,8 @@ package com.example.unfound.Data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.unfound.domain.model.Place
+
 
 @Entity
 data class PlaceEntity(
@@ -12,8 +14,8 @@ data class PlaceEntity(
     val lng: Double
 )
 
-fun PlaceEntity.mapToPlaceModel(): PlaceModel {
-    return PlaceModel(
+fun PlaceEntity.mapToPlaceModel(): Place {
+    return Place(
         id = id,
         name = name,
         address = address,

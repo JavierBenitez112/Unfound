@@ -10,18 +10,10 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.api.net.SearchNearbyRequest
 import kotlinx.coroutines.tasks.await
+import com.example.unfound.Data.DataError
+import com.example.unfound.Data.Result
 
-sealed class DataError {
-    object NO_INTERNET : DataError()
-    object GENERIC_ERROR : DataError()
-}
-
-sealed class Result<out T, out E> {
-    data class Success<out T>(val data: T) : Result<T, Nothing>()
-    data class Error<out E>(val error: E) : Result<Nothing, E>()
-}
-
-class PlaceRepository(private val placesClient: PlacesClient) {
+data class PlaceRepository(private val placesClient: PlacesClient) {
 
     suspend fun searchNearbyPlaces(center: LatLng, radius: Double, includedTypes: List<String>): Result<List<Place>, DataError> {
         val placeFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
