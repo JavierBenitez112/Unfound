@@ -1,4 +1,4 @@
-package com.example.unfound.Presentation.signUp
+package com.example.unfound.Presentation.Sign.signUp
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

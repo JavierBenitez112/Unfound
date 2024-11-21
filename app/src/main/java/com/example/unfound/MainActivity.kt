@@ -1,7 +1,9 @@
 package com.example.unfound
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Surface
@@ -10,10 +12,18 @@ import com.example.unfound.ui.theme.UnfoundTheme
 import com.google.android.libraries.places.api.Places
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
+import com.example.unfound.Presentation.Sign.SignInViewModel
 import com.example.unfound.navigation.AppNavigation
 
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class MainActivity : ComponentActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
+    private val authViewModel: SignInViewModel by viewModels { SignInViewModel.Factory }
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +51,7 @@ class MainActivity : ComponentActivity(), ActivityCompat.OnRequestPermissionsRes
         setContent {
             UnfoundTheme {
                 Surface {
-                    AppNavigation()
+                    AppNavigation(viewModel = authViewModel)
                 }
             }
         }

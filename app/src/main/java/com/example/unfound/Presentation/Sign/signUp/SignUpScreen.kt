@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,50 +34,47 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.unfound.Presentation.Sign.SignInViewModel
 import com.example.unfound.R
-import androidx.compose.material3.MaterialTheme.typography as typography1
+
 @Composable
 fun SignUpRoute(
-    onSignUpClick: () -> Unit
-) {
+    onSignUpClick: () -> Unit,
+    viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
+){
     SignUpScreen(
-        onSignUpClick = onSignUpClick
+        onSignUpClick = onSignUpClick,
+
     )
 }
+
 @Composable
 fun SignUpScreen(
     onSignUpClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: SignUpViewModel = androidx.lifecycle.viewmodel.compose.viewModel() // Obteniendo el ViewModel
+    modifier: Modifier = Modifier
 ) {
-    val email by viewModel.email.collectAsState()
-    val password by viewModel.password.collectAsState()
-    val signUpSuccess by viewModel.signUpSuccess.collectAsState()
-
-    // Mostrar un mensaje o realizar una acción cuando el registro sea exitoso
-    if (signUpSuccess) {
-        Text("Registro exitoso")
-    }
-
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)
+                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center // Centrar contenido
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+
+                ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -91,6 +87,7 @@ fun SignUpScreen(
                         )
                     )
                 )
+
             }
         }
 
@@ -101,37 +98,32 @@ fun SignUpScreen(
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )
-
+        // Llamada a la función LoginForm
         SignForm(
-            email = email,
-            onEmailChange = viewModel::onEmailChange,
-            password = password,
-            onPasswordChange = viewModel::onPasswordChange,
-            onSignUpClick = {
-                viewModel.signUpUser()
-                onSignUpClick()
-            }
+            onSignUpClick = onSignUpClick,
         )
-    }
-}
+    }}
+
 
 @Composable
 fun SignForm(
-    email: String,
-    onEmailChange: (String) -> Unit,
-    password: String,
-    onPasswordChange: (String) -> Unit,
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = Modifier
+
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Campo de texto para el Email
         OutlinedTextField(
             value = email,
-            onValueChange = onEmailChange,
+            onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -139,9 +131,10 @@ fun SignForm(
             singleLine = true
         )
 
+        // Campo de texto para el Password
         OutlinedTextField(
             value = password,
-            onValueChange = onPasswordChange,
+            onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,8 +143,11 @@ fun SignForm(
             singleLine = true
         )
 
+
         Button(
-            onClick = onSignUpClick,
+            onClick = {
+                onSignUpClick()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
@@ -159,11 +155,18 @@ fun SignForm(
                 containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
-            Text(
-                text = "Sign Up",
+            Text(text = "Sign Up",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+                color = MaterialTheme.colorScheme.onBackground)
         }
+
     }
+}
+
+@Composable
+@Preview
+fun SignUpScreenPreview() {
+    SignUpScreen(
+        onSignUpClick = {}
+    )
 }
