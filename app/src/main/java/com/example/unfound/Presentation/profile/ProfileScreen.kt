@@ -50,6 +50,7 @@ fun ProfileRoute(
         dataStoreUserPrefs = dataStoreUserPrefs
     )
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
@@ -59,7 +60,7 @@ fun ProfileScreen(
     dataStoreUserPrefs: DataStoreUserPrefs
 ) {
     val visitedPlaces by profileViewModel.visitedPlaces.collectAsState()
-    var userName by remember { mutableStateOf("Cambiar Nombre") }
+    var userName by remember { mutableStateOf("Introduce tu nombre") }
     val isDarkTheme = isSystemInDarkTheme()
     val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
     var isEditing by remember { mutableStateOf(false) }
@@ -75,11 +76,10 @@ fun ProfileScreen(
             }
         }
     }
-    val scope = rememberCoroutineScope()
     val nameFlow = dataStoreUserPrefs.getName().collectAsState(initial = "")
 
     LaunchedEffect(nameFlow.value) {
-        userName = nameFlow.value ?: ""
+        userName = nameFlow.value ?: "Introduce tu nombre"
     }
 
     Scaffold(
@@ -154,11 +154,8 @@ fun ProfileScreen(
                                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                                 keyboardActions = KeyboardActions(
                                     onDone = {
-                                        scope.launch {
-                                            dataStoreUserPrefs.saveName(userName)
-                                            isEditing = false
-                                            keyboardController?.hide()
-                                        }
+                                        isEditing = false
+                                        keyboardController?.hide()
                                     }
                                 )
                             )
@@ -177,28 +174,6 @@ fun ProfileScreen(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-
-//                    Button(
-//                        onClick = {
-//                            val intent = Intent(Intent.ACTION_PICK).apply {
-//                                type = "image/*"
-//                            }
-//                            launcher.launch(intent)
-//                        },
-//                        colors = ButtonDefaults.buttonColors(
-//                            containerColor = MaterialTheme.colorScheme.surface,
-//                            contentColor = MaterialTheme.colorScheme.primary
-//                        ),
-//                        modifier = Modifier.padding(8.dp),
-//                        shape = RoundedCornerShape(16.dp)
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.Default.Edit,
-//                            contentDescription = "Edit Icon"
-//                        )
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        Text(text = "Cambiar foto de perfil")
-//                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 

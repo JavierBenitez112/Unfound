@@ -28,15 +28,11 @@ import kotlinx.coroutines.flow.update
 
 class MapScreenViewModel(
     private val placeRepository: PlaceRepository,
-    savedStateHandle: SavedStateHandle,
     application: Application
 ) : AndroidViewModel(application) {
 
     private val _state = MutableStateFlow(MapScreenState())
     val state: StateFlow<MapScreenState> = _state.asStateFlow()
-
-    private val _visitedPlaces = MutableStateFlow<List<Place>>(emptyList())
-    val visitedPlaces: StateFlow<List<Place>> = _visitedPlaces.asStateFlow()
 
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application)
 
@@ -72,7 +68,7 @@ class MapScreenViewModel(
                     }
                 }
                 is Result.Error -> {
-                    // Handle error
+
                 }
             }
         }
@@ -86,7 +82,7 @@ class MapScreenViewModel(
                     fetchPlacePhoto(result.data)
                 }
                 is Result.Error -> {
-                    // Handle error
+
                 }
             }
         }
@@ -101,18 +97,10 @@ class MapScreenViewModel(
                         _state.update { it.copy(photoBitmap = result.data) }
                     }
                     is Result.Error -> {
-                        // Handle error
+
                     }
                 }
             }
-        }
-    }
-
-    fun addVisitedPlace(place: Place) {
-        viewModelScope.launch {
-            _visitedPlaces.value = _visitedPlaces.value + place
-            val dataStoreManager = DataStoreManager(getApplication())
-            dataStoreManager.addVisitedPlace(place.id ?: "")
         }
     }
 
@@ -124,8 +112,7 @@ class MapScreenViewModel(
                 val repository = PlaceRepository(placesClient)
                 MapScreenViewModel(
                     placeRepository = repository,
-                    savedStateHandle = this.createSavedStateHandle(),
-                    application = context as Application
+                    application = context
                 )
             }
         }

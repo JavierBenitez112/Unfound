@@ -36,7 +36,6 @@ class PlaceRepository(private val placesClient: PlacesClient) {
             val response = placesClient.searchNearby(searchNearbyRequest).await()
             Result.Success(response.places)
         } catch (exception: Exception) {
-            // Handle specific exceptions if needed
             Result.Error(DataError.GENERIC_ERROR)
         }
     }
@@ -49,7 +48,6 @@ class PlaceRepository(private val placesClient: PlacesClient) {
             val response = placesClient.fetchPlace(request).await()
             Result.Success(response.place)
         } catch (exception: Exception) {
-            // Handle specific exceptions if needed
             Result.Error(DataError.GENERIC_ERROR)
         }
     }
@@ -61,7 +59,6 @@ class PlaceRepository(private val placesClient: PlacesClient) {
             val response = placesClient.fetchPhoto(request).await()
             Result.Success(response.bitmap)
         } catch (exception: Exception) {
-            // Handle specific exceptions if needed
             Result.Error(DataError.GENERIC_ERROR)
         }
     }
