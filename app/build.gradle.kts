@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.serialization)
     id("kotlin-kapt")
     id("com.google.gms.google-services") // Plugin de Google Services para Firebase
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -71,10 +72,12 @@ android {
 dependencies {
     // Firebase BoM
     implementation(platform(libs.firebase.bom))
+    implementation(libs.google.firebase.auth)
     implementation(libs.firebase.analytics)
+    implementation(libs.google.firebase.crashlytics.ktx)
 
+    // Other dependencies
     implementation(libs.androidx.ui.text.google.fonts.v143)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -88,6 +91,8 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.runner)
     implementation(libs.androidx.espresso.core)
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.androidx.animation.core.lint)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,7 +104,6 @@ dependencies {
     // Coil
     implementation(libs.coil3.coil.compose)
     implementation(libs.coil.compose)
-
 
     // Maps
     implementation(libs.maps.compose)
@@ -117,5 +121,4 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.firebase.libs)
     implementation(libs.kotlinx.coroutines.play.services)
-
 }

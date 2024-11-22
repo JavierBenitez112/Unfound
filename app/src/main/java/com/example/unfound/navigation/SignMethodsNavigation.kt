@@ -35,13 +35,15 @@ fun NavGraphBuilder.LoginGraph(
         )
         SignInScreen(
             onSignInClick = {
-                signInViewModel.authenticateUser {
-                    navController.NavigateToMapGraph(
-                        navOptions = NavOptions.Builder().setPopUpTo<LoginDestination>(
-                            inclusive = false
-                        ).build()
-                    )
-                }
+                signInViewModel.authenticateUser(
+                    onSuccess = {
+                        navController.NavigateToMapGraph(
+                            navOptions = NavOptions.Builder().setPopUpTo<LoginDestination>(
+                                inclusive = false
+                            ).build()
+                        )
+                    }
+                )
             },
             onForgotPasswordClick = navController::navigateToForgotScreen
         )
@@ -50,13 +52,15 @@ fun NavGraphBuilder.LoginGraph(
         )
         signUpScreen(
             onSignUpClick = {
-                signInViewModel.authenticateUser {
-                    navController.NavigateToMapGraph(
-                        navOptions = NavOptions.Builder().setPopUpTo<LoginDestination>(
-                            inclusive = false
-                        ).build()
-                    )
-                }
+                signInViewModel.authenticateUser(
+                    onSuccess = {
+                        navController.NavigateToMapGraph(
+                            navOptions = NavOptions.Builder().setPopUpTo<LoginDestination>(
+                                inclusive = false
+                            ).build()
+                        )
+                    }
+                )
             }
         )
     }

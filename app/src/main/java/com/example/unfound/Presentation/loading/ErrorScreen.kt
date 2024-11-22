@@ -18,12 +18,14 @@ import androidx.compose.ui.unit.dp
 fun ErrorScreen(onRetry: () -> Unit) {
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(32.dp), // Añadir padding desde los bordes de la pantalla
         contentAlignment = Alignment.Center
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp) // Añadir padding dentro de la columna
         ) {
             Text(
                 text = "Por favor, activa la ubicación para usar la aplicación.",

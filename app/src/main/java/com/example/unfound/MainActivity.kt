@@ -14,19 +14,25 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.unfound.Presentation.Sign.SignInViewModel
+import com.example.unfound.Presentation.Sign.SignStatus
 import com.example.unfound.navigation.AppNavigation
-
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class MainActivity : ComponentActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
     private val authViewModel: SignInViewModel by viewModels { SignInViewModel.Factory }
     private val LOCATION_PERMISSION_REQUEST_CODE = 1
+    private var keepSplashScreenOn = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen().setKeepOnScreenCondition {
+            keepSplashScreenOn && authViewModel.authStatus.value is SignStatus.Loading
+        }
+
         super.onCreate(savedInstanceState)
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -63,6 +69,7 @@ class MainActivity : ComponentActivity(), ActivityCompat.OnRequestPermissionsRes
             if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 initializeMap()
             } else {
+                keepSplashScreenOn = false
                 setContent {
                     UnfoundTheme {
                         Surface {

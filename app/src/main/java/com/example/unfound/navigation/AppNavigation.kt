@@ -9,11 +9,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
-import com.example.unfound.Presentation.Login.LoginDestination
 import com.example.unfound.Presentation.Sign.SignInViewModel
 import com.example.unfound.Presentation.Sign.SignStatus
 import com.example.unfound.Presentation.loading.LoadingScreen
-import kotlinx.serialization.Serializable
 
 @Composable
 fun AppNavigation(

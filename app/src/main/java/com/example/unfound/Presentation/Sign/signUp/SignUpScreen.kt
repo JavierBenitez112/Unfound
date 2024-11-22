@@ -3,7 +3,6 @@ package com.example.unfound.Presentation.signUp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,12 +12,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,31 +32,46 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.unfound.Presentation.Sign.SignInViewModel
+import com.example.unfound.Presentation.Sign.SignIn.SignInEvent
 import com.example.unfound.R
+import com.uvg.ejercicioslabs.ejercicios.firebase.presentation.login.SignViewModel
 
 @Composable
 fun SignUpRoute(
-    onSignUpClick: () -> Unit,
-    viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
-){
-    SignUpScreen(
-        onSignUpClick = onSignUpClick,
+    viewModel: SignViewModel = viewModel(factory = SignViewModel.Factory),
+    onSignUpClick: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    SignUpScreen(
+        email = uiState.email,
+        password = uiState.password,
+        successMessage = uiState.successMessage,
+        errorMessage = uiState.errorMessage,
+        isLoading = uiState.isLoading,
+        onEvent = viewModel::onEvent,
+        onSignUpClick = onSignUpClick
     )
 }
 
 @Composable
 fun SignUpScreen(
+    email: String,
+    password: String,
+    successMessage: String?,
+    errorMessage: String?,
+    isLoading: Boolean,
+    onEvent: (SignInEvent) -> Unit,
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -61,20 +82,18 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Box(
             modifier = Modifier
                 .padding(16.dp)
-                .border(8.dp, MaterialTheme.colorScheme.primary)  // Usando el color primario
+                .border(8.dp, MaterialTheme.colorScheme.primary)
                 .padding(8.dp)
                 .fillMaxWidth(),
-            contentAlignment = Alignment.Center // Centrar contenido
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-
-                ) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -87,7 +106,6 @@ fun SignUpScreen(
                         )
                     )
                 )
-
             }
         }
 
@@ -98,68 +116,128 @@ fun SignUpScreen(
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )
-        // Llamada a la función LoginForm
-        SignForm(
-            onSignUpClick = onSignUpClick,
-        )
-    }}
 
+        SignForm(
+            email = email,
+            password = password,
+            successMessage = successMessage,
+            errorMessage = errorMessage,
+            isLoading = isLoading,
+            onEvent = onEvent,
+            onSignUpClick = onSignUpClick
+        )
+    }
+}
 
 @Composable
 fun SignForm(
+    email: String,
+    password: String,
+    successMessage: String?,
+    errorMessage: String?,
+    isLoading: Boolean,
+    onEvent: (SignInEvent) -> Unit,
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
-
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Campo de texto para el Email
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = { onEvent(SignInEvent.EmailChanged(it)) },
             label = { Text("Email") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            singleLine = true
+            singleLine = true,
+            enabled = !isLoading
         )
 
-        // Campo de texto para el Password
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = { onEvent(SignInEvent.PasswordChanged(it)) },
             label = { Text("Password") },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            singleLine = true,
+            enabled = !isLoading,
+            trailingIcon = {
+                IconButton(
+                    onClick = { passwordVisible = !passwordVisible }
+                ) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                    )
+                }
+            }
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (successMessage != null || errorMessage != null) {
+            Text(
+                text = successMessage ?: errorMessage ?: "",
+                color = if (errorMessage != null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         Button(
-            onClick = {
-                onSignUpClick()
-            },
+            onClick = { onEvent(SignInEvent.CreateAccountClicked) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary
-            )
+            ),
+            enabled = !isLoading
         ) {
-            Text(text = "Sign Up",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground)
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            } else {
+                Text(
+                    text = "Sign Up",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = { onSignUpClick() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ),
+            enabled = successMessage != null
+        ) {
+            Text(
+                text = "Ingresar",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }
 
@@ -167,6 +245,12 @@ fun SignForm(
 @Preview
 fun SignUpScreenPreview() {
     SignUpScreen(
+        email = "",
+        password = "",
+        successMessage = null,
+        errorMessage = null,
+        isLoading = false,
+        onEvent = {},
         onSignUpClick = {}
     )
 }

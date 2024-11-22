@@ -24,7 +24,7 @@ class SignInViewModel(
 
     val authStatus = preferences.authStatus()
         .onStart {
-            delay(2000)
+            delay(1000)
         }
         .map { isLogged ->
             if (isLogged) {
@@ -44,11 +44,7 @@ class SignInViewModel(
             SignStatus.Loading
         )
 
-    fun login() {
-        viewModelScope.launch {
-            preferences.logIn()
-        }
-    }
+
 
     fun authenticateUser(onSuccess: () -> Unit) {
         viewModelScope.launch {
