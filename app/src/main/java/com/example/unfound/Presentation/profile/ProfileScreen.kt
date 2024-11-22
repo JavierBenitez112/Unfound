@@ -77,6 +77,7 @@ fun ProfileScreen(
         }
     }
     val nameFlow = dataStoreUserPrefs.getName().collectAsState(initial = "")
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(nameFlow.value) {
         userName = nameFlow.value ?: "Introduce tu nombre"
@@ -156,6 +157,9 @@ fun ProfileScreen(
                                     onDone = {
                                         isEditing = false
                                         keyboardController?.hide()
+                                        coroutineScope.launch {
+                                            dataStoreUserPrefs.saveName(userName)
+                                        }
                                     }
                                 )
                             )
