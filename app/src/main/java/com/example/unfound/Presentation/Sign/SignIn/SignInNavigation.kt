@@ -1,7 +1,8 @@
-package com.example.unfound.Presentation.SignIn
+package com.example.unfound.Presentation.Sign.SignIn
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.example.unfound.Presentation.SignIn.SignInRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,4 +18,5 @@ fun NavGraphBuilder.SignInScreen(
             onForgotPasswordClick = onForgotPasswordClick
         )
     }
+
 }

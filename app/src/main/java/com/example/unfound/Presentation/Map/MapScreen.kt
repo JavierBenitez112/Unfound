@@ -1,78 +1,59 @@
 package com.example.unfound.Presentation.Map
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.unfound.Data.source.LocationsDb
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.unfound.Presentation.profile.ProfileScreenViewModel
+import com.example.unfound.Presentation.profile.VisitedPlace
 import com.example.unfound.R
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
-
+import com.google.maps.android.compose.*
 
 @Composable
 fun MapRoute(
     onProfileClick: () -> Unit,
 ) {
     MapScreen1(
-        onProfileClick = onProfileClick
+        onProfileClick = onProfileClick,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen1(
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
+    profileViewModel: ProfileScreenViewModel = viewModel()
 ) {
-    val locations = LocationsDb.getLocations()
-    val initialLocation = locations[0]
-    val newLocation = locations[1]
+    val viewModel: MapScreenViewModel = viewModel(
+        factory = MapScreenViewModel.Factory
+    )
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(initialLocation.latitude, initialLocation.longitude), 15f)
-    }
+    val cameraPositionState = rememberCameraPositionState()
+    val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
 
-    var uiSettings by remember {
-        mutableStateOf(MapUiSettings(zoomControlsEnabled = true))
-    }
-    var properties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
-    }
-    var markerState by remember {
-        mutableStateOf(MarkerState(position = LatLng(initialLocation.latitude, initialLocation.longitude)))
+    LaunchedEffect(state.markerPosition) {
+        state.markerPosition?.let { position ->
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(position, 15f)
+        }
     }
 
     Scaffold(
@@ -84,10 +65,17 @@ fun MapScreen1(
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.unfoundbg), // Cambiar por el logo deseado
+                            painter = painterResource(id = logoResource),
                             contentDescription = "Logo",
                             modifier = Modifier.size(50.dp)
                         )
+                    }
+                },
+                navigationIcon = {
+                    Box(modifier = Modifier.alpha(0f)) {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
                     }
                 },
                 actions = {
@@ -101,49 +89,81 @@ fun MapScreen1(
             Box(modifier = Modifier.padding(padding)) {
                 GoogleMap(
                     cameraPositionState = cameraPositionState,
-                    properties = properties,
-                    uiSettings = uiSettings
+                    properties = MapProperties(mapType = MapType.NORMAL),
+                    uiSettings = MapUiSettings(zoomControlsEnabled = true)
                 ) {
-                    Marker(
-                        state = markerState,
-                        title = initialLocation.name
-                    )
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(16.dp)
-                ) {
-                    Button(
-                        onClick = { /* Acción del primer botón */ },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Ir")
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(
-                        onClick = {
-                            markerState = MarkerState(position = LatLng(newLocation.latitude, newLocation.longitude))
-                            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(newLocation.latitude, newLocation.longitude), 15f)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.tertiary
+                    state.markerPosition?.let { position ->
+                        Marker(
+                            state = MarkerState(position = position),
+                            title = "Ubicación seleccionada"
                         )
+                    }
+                }
+
+                state.selectedPlace?.let { place ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomCenter)
+                            .background(MaterialTheme.colorScheme.background)
+                            .padding(16.dp)
                     ) {
-                        Text("Otro Lugar")
+                        Text(
+                            text = place.name,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = place.address,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        state.photoBitmap?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Place Image",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(150.dp)
+                                    .padding(bottom = 16.dp)
+                            )
+                        }
+                        Button(
+                            onClick = {
+                                val gmmIntentUri = Uri.parse("geo:0,0?q=${place.address}")
+                                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
+                                profileViewModel.addVisitedPlace(
+                                    VisitedPlace(
+                                        id = place.id ?: "",
+                                        name = place.name ?: "",
+                                        address = place.address ?: "",
+                                        photoBitmap = state.photoBitmap
+                                    )
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Ir")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                state.markerPosition?.let { userPosition ->
+                                    viewModel.searchNearbyPlaces(userPosition, 2000.0, listOf("restaurant", "tourist_attraction"))
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.tertiary
+                            )
+                        ) {
+                            Text("Otro Lugar")
+                        }
                     }
                 }
             }
         }
-    )
-}
-
-@Composable
-@Preview
-fun MapScreenPreview1() {
-    MapScreen1(
-        onProfileClick = {}
     )
 }

@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,8 @@ fun ForgotRoute() {
 
 @Composable
 fun ForgotScreen() {
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -80,7 +83,7 @@ fun ForgotScreen() {
 
         // Logo
         Image(
-            painter = painterResource(id = R.drawable.unfoundbg),
+            painter = painterResource(id = logoResource),
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )

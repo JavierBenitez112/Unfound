@@ -1,9 +1,10 @@
-package com.example.unfound.Presentation
+package com.example.unfound.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
+import com.example.unfound.Data.local.DataStoreUserPrefs
 import com.example.unfound.Presentation.Map.MapDestination
 import com.example.unfound.Presentation.Map.MapScreen
 import com.example.unfound.Presentation.profile.ProfileScreen
@@ -20,7 +21,8 @@ fun NavController.NavigateToMapGraph(
 }
 
 fun NavGraphBuilder.HomeGraph(
-    navController: NavController
+    navController: NavController,
+    dataStoreUserPrefs: DataStoreUserPrefs
 ){
     navigation<HomeNavGraph>(
         startDestination = MapDestination
@@ -31,7 +33,8 @@ fun NavGraphBuilder.HomeGraph(
             }
         )
         ProfileScreen(
-            onBackClick = navController::navigateUp
+            onBackClick = navController::navigateUp,
+            dataStoreUserPrefs = dataStoreUserPrefs
         )
     }
 }

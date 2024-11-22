@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.example.unfound.Data.local.DataStoreUserPrefs
 import com.example.unfound.Presentation.log.ForgotRoute
 import kotlinx.serialization.Serializable
 
@@ -20,11 +21,13 @@ fun NavController.navigateToProfileScreen(
 }
 
 fun NavGraphBuilder.ProfileScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    dataStoreUserPrefs: DataStoreUserPrefs
 ) {
     composable<ProfileDestination> {
         ProfileRoute(
-            onBackClick = onBackClick
-        )
+            onBackClick = onBackClick,
+            dataStoreUserPrefs = dataStoreUserPrefs)
+
     }
 }

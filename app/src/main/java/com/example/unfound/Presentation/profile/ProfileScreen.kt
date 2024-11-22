@@ -1,21 +1,14 @@
 package com.example.unfound.Presentation.profile
 
-
+import android.app.Activity
+import android.content.Intent
+import android.graphics.BitmapFactory
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -26,51 +19,35 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.Bitmap
+import com.example.unfound.Data.local.DataStoreUserPrefs
 import com.example.unfound.R
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import com.example.unfound.Data.source.VisitedPlacesDb
-
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileRoute(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    dataStoreUserPrefs: DataStoreUserPrefs
 ) {
     ProfileScreen(
         onBackClick = onBackClick,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        dataStoreUserPrefs = dataStoreUserPrefs
     )
 }
 
@@ -78,31 +55,57 @@ fun ProfileRoute(
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    profileViewModel: ProfileScreenViewModel = viewModel(),
+    dataStoreUserPrefs: DataStoreUserPrefs
 ) {
-    val visitedPlaces = VisitedPlacesDb.getAllPlaces()
-    var userName by remember { mutableStateOf("Cambiar Nombre") }
+    val visitedPlaces by profileViewModel.visitedPlaces.collectAsState()
+    var userName by remember { mutableStateOf("Introduce tu nombre") }
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
     var isEditing by remember { mutableStateOf(false) }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    var profileImage by remember { mutableStateOf<Bitmap?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val uri = result.data?.data
+            uri?.let {
+                val inputStream = context.contentResolver.openInputStream(it)
+                profileImage = BitmapFactory.decodeStream(inputStream)
+            }
+        }
+    }
+    val nameFlow = dataStoreUserPrefs.getName().collectAsState(initial = "")
+
+    LaunchedEffect(nameFlow.value) {
+        userName = nameFlow.value ?: "Introduce tu nombre"
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Box(
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.unfoundbg),
-                            contentDescription = "Logo",
-                            modifier = Modifier.size(50.dp)
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { onBackClick() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Menu")
+                        IconButton(onClick = { onBackClick() }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "back")
+                        }
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = logoResource),
+                                contentDescription = "Logo",
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
+                        IconButton(onClick = { /* TODO */ }) {
+                            Icon(Icons.Default.Menu, contentDescription = "menu", tint = Color.Transparent)
+                        }
                     }
                 }
             )
@@ -117,7 +120,16 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    Image(
+                    profileImage?.let {
+                        Image(
+                            bitmap = it.asImageBitmap(),
+                            contentDescription = "Profile Picture",
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                        )
+                    } ?: Image(
                         painter = painterResource(id = R.drawable.profile),
                         contentDescription = "Profile Picture",
                         modifier = Modifier
@@ -163,23 +175,6 @@ fun ProfileScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Button(
-                        onClick = { /* Acción de cambiar foto */ },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        ),
-                        modifier = Modifier.padding(8.dp),
-                        shape = RoundedCornerShape(16.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit Icon"
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Cambiar foto de perfil")
-                    }
-
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Text(
@@ -194,9 +189,8 @@ fun ProfileScreen(
                 items(visitedPlaces) { place ->
                     VisitedPlaceCard(
                         name = place.name,
-                        description = place.description,
-                        imageResId = place.imageResId,
-                        starCount = place.starCount
+                        description = place.address ?: "",
+                        photoBitmap = place.photoBitmap
                     )
                 }
             }
@@ -208,8 +202,7 @@ fun ProfileScreen(
 fun VisitedPlaceCard(
     name: String,
     description: String,
-    imageResId: Int,
-    starCount: Int
+    photoBitmap: Bitmap?
 ) {
     Card(
         modifier = Modifier
@@ -238,40 +231,15 @@ fun VisitedPlaceCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Image(
-                painter = painterResource(id = imageResId),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Row(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                repeat(5) { index ->
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "Star Icon",
-                        modifier = Modifier.size(24.dp),
-                        tint = if (index < starCount) Color.Black else Color.Gray
-                    )
-                }
+            photoBitmap?.let {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = "Place Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewProfileScreen() {
-    MaterialTheme {
-        ProfileScreen(
-            modifier = Modifier.fillMaxSize(),
-            onBackClick = {}
-        )
     }
 }

@@ -3,6 +3,7 @@ package com.example.unfound.Presentation.Login
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +46,8 @@ fun LoginScreen1(
     onLoginClick: () -> Unit,
     onSignUpClick: () -> Unit
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +68,7 @@ fun LoginScreen1(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
 
-            ) {
+                ) {
                 Text(
                     text = "UNFOUND",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -90,21 +90,18 @@ fun LoginScreen1(
             }
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
         Image(
-            painter = painterResource(id = R.drawable.unfoundbg),
+            painter = painterResource(id = logoResource),
             contentDescription = "Logo",
             modifier = Modifier.size(250.dp)
         )
 
-        // Botones de Login y Crear cuenta modificar accion despues para redirigir a la pantalla de login
         Spacer(modifier = Modifier.height(32.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Botón de Login
             Button(
                 onClick = { onLoginClick() },
                 colors = ButtonDefaults.buttonColors(
