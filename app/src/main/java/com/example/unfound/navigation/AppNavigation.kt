@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
+import com.example.unfound.Data.local.DataStoreUserPrefs
 import com.example.unfound.Presentation.Sign.SignInViewModel
 import com.example.unfound.Presentation.Sign.SignStatus
 import com.example.unfound.Presentation.loading.LoadingScreen
@@ -17,7 +18,8 @@ import com.example.unfound.Presentation.loading.LoadingScreen
 fun AppNavigation(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
+    viewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory),
+    dataStoreUserPrefs: DataStoreUserPrefs
 ) {
     val authStatus by viewModel.authStatus.collectAsStateWithLifecycle()
 
@@ -53,7 +55,7 @@ fun AppNavigation(
             modifier = modifier
         ) {
             LoginGraph(navController, viewModel)
-            HomeGraph(navController)
+            HomeGraph(navController, dataStoreUserPrefs)
         }
     }
 }

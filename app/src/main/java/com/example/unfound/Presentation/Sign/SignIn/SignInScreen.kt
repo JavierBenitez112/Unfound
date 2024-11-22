@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -61,6 +62,9 @@ fun SignInScreen(
     onForgotPasswordClick: () -> Unit
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
+
 
     LaunchedEffect(successMessage) {
         if (successMessage != null) {
@@ -105,7 +109,7 @@ fun SignInScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.unfoundbg),
+            painter = painterResource(id = logoResource),
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )

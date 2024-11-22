@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.unfound.Data.local.DataStoreUserPrefs
 import com.example.unfound.Presentation.Sign.SignInViewModel
 import com.example.unfound.Presentation.Sign.SignStatus
 import com.example.unfound.navigation.AppNavigation
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity(), ActivityCompat.OnRequestPermissionsRes
         setContent {
             UnfoundTheme {
                 Surface {
-                    AppNavigation(viewModel = authViewModel)
+                    AppNavigation(viewModel = authViewModel,dataStoreUserPrefs = DataStoreUserPrefs(dataStore))
                 }
             }
         }

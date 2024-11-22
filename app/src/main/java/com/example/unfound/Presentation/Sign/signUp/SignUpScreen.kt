@@ -3,6 +3,7 @@ package com.example.unfound.Presentation.signUp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -75,6 +76,9 @@ fun SignUpScreen(
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -112,7 +116,7 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Image(
-            painter = painterResource(id = R.drawable.unfoundbg),
+            painter = painterResource(id = logoResource),
             contentDescription = "Logo",
             modifier = Modifier.size(175.dp)
         )

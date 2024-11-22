@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -46,6 +47,8 @@ fun MapScreen1(
     val cameraPositionState = rememberCameraPositionState()
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoResource = if (isDarkTheme) R.drawable.unfoundbgwhite else R.drawable.unfoundbg
 
     LaunchedEffect(state.markerPosition) {
         state.markerPosition?.let { position ->
@@ -62,7 +65,7 @@ fun MapScreen1(
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.unfoundbg),
+                            painter = painterResource(id = logoResource),
                             contentDescription = "Logo",
                             modifier = Modifier.size(50.dp)
                         )
