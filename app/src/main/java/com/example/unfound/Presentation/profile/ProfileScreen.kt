@@ -167,7 +167,7 @@ fun ProfileScreen(
                 items(visitedPlaces) { place ->
                     VisitedPlaceCard(
                         name = place.name,
-                        description = place.address ?: "",
+                        description = place.address,
                         photoBitmap = place.photoBitmap
                     )
                 }

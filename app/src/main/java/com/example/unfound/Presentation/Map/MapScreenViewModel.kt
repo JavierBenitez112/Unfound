@@ -19,6 +19,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.unfound.Data.local.DataStoreManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -110,6 +111,8 @@ class MapScreenViewModel(
     fun addVisitedPlace(place: Place) {
         viewModelScope.launch {
             _visitedPlaces.value = _visitedPlaces.value + place
+            val dataStoreManager = DataStoreManager(getApplication())
+            dataStoreManager.addVisitedPlace(place.id ?: "")
         }
     }
 

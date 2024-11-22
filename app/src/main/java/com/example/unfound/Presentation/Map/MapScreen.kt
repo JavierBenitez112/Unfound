@@ -125,7 +125,6 @@ fun MapScreen1(
                                     .padding(bottom = 16.dp)
                             )
                         }
-
                         Button(
                             onClick = {
                                 val gmmIntentUri = Uri.parse("geo:0,0?q=${place.address}")
@@ -134,9 +133,9 @@ fun MapScreen1(
                                 context.startActivity(mapIntent)
                                 profileViewModel.addVisitedPlace(
                                     VisitedPlace(
-                                        id = place.id,
-                                        name = place.name,
-                                        address = place.address,
+                                        id = place.id ?: "",
+                                        name = place.name ?: "",
+                                        address = place.address ?: "",
                                         photoBitmap = state.photoBitmap
                                     )
                                 )
